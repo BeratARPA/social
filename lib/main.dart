@@ -7,7 +7,6 @@ import 'package:social/helpers/app_themes.dart';
 import 'package:social/services/auth_service.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
 import 'package:social/views/auth/login_view.dart';
-import 'package:social/views/general/splash_screen_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,11 +38,8 @@ class MainApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       navigatorKey: AppNavigator.navigatorKey,
-      initialRoute: "/splashScreen",
-      routes: {
-        "/splashScreen": (context) => const SplashScreenView(),
-        "/login": (context) => const LoginView(),
-      },
+      initialRoute: "/login",
+      routes: {"/login": (context) => const LoginView()},
     );
   }
 }
