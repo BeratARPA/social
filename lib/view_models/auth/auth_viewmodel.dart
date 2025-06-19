@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social/helpers/app_navigator.dart';
 import 'package:social/services/auth_service.dart';
-import 'package:social/view_models/base_viewmodel.dart';
+import 'package:social/view_models/general/base_viewmodel.dart';
 
 class AuthViewModel extends BaseViewModel {
   final AuthService _authService;

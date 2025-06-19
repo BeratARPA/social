@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social/firebase_options.dart';
 import 'package:social/helpers/app_navigator.dart';
+import 'package:social/helpers/app_themes.dart';
 import 'package:social/services/auth_service.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
 import 'package:social/views/auth/login_view.dart';
@@ -33,6 +34,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       navigatorKey: AppNavigator.navigatorKey,
       initialRoute: "/splashScreen",
@@ -40,7 +44,6 @@ class MainApp extends StatelessWidget {
         "/splashScreen": (context) => const SplashScreenView(),
         "/login": (context) => const LoginView(),
       },
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:social/view_models/base_viewmodel.dart';
+import 'package:social/view_models/general/base_viewmodel.dart';
 
 class SplashScreenViewModel extends BaseViewModel {
   SplashScreenViewModel() {
