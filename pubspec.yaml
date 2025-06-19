@@ -32,29 +32,31 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
 
 flutter:
-  uses-material-design: true
   generate: true
+  uses-material-design: true
 
   assets:
-    - resources/
-    - resources/fonts/
-    - resources/images/
+    - assets/
+    - assets/fonts/
+    - assets/images/
 
   fonts:
     - family: Montserrat
       fonts:
-        - asset: resources/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Regular.ttf
           weight: 400
-        - asset: resources/fonts/Montserrat-Bold.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
           weight: 700
 
 flutter_launcher_icons:
-  image_path: "resources/images/app_logo.png"
   android: true
   ios: true
-
+  image_path: "assets/images/app_logo.png"
+  adaptive_icon_background: "assets/images/app_logo_background.png"
+  adaptive_icon_foreground: "assets/images/app_logo_foreground.png"
+  min_sdk_android: 21
   web:
     generate: true
-    image_path: "resources/images/app_logo.png"
+    image_path: "assets/images/app_logo.png"
     background_color: "#ffffff"
     theme_color: "#4A90E2"

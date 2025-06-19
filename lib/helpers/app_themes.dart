@@ -6,6 +6,7 @@ class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightBackground,
+    fontFamily: "Montserrat",
     primaryColor: AppColors.primary,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.lightSurface,
@@ -59,6 +60,7 @@ class AppThemes {
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.darkBackground,
+    fontFamily: "Montserrat",
     primaryColor: AppColors.primary,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.darkSurface,
