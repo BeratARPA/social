@@ -2,8 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 class BaseViewModel extends ChangeNotifier {
-  bool _disposed = false;
-
   bool _isConnected = true;
   bool get isConnected => _isConnected;
 
@@ -36,7 +34,7 @@ class BaseViewModel extends ChangeNotifier {
   void initConnectivityListener() {
     Connectivity().onConnectivityChanged.listen((status) {
       _isConnected = status != ConnectivityResult.none;
-      safeNotifyListeners();
+      notifyListeners();
     });
   }
 
@@ -50,17 +48,17 @@ class BaseViewModel extends ChangeNotifier {
 
   void setLoading(bool value) {
     _isLoading = value;
-    safeNotifyListeners();
+    notifyListeners();
   }
 
   void setError(String? message) {
     _errorMessage = message;
-    safeNotifyListeners();
+    notifyListeners();
   }
 
   void clearError() {
     _errorMessage = null;
-    safeNotifyListeners();
+    notifyListeners();
   }
 
   Future<void> runAsync(
@@ -77,19 +75,14 @@ class BaseViewModel extends ChangeNotifier {
     }
   }
 
-  void safeNotifyListeners() {
-    if (!_disposed) notifyListeners();
-  }
-
   @override
   void dispose() {
-    _disposed = true;
     super.dispose();
   }
 
   void resetAll() {
     _isLoading = false;
     _errorMessage = null;
-    safeNotifyListeners();
+    notifyListeners();
   }
 }

@@ -12,7 +12,7 @@ class AuthViewModel extends BaseViewModel {
     // Kullanıcı durumunu dinle
     _authService.userChanges.listen((value) {
       user = value;
-      safeNotifyListeners();
+      notifyListeners();
     });
 
     initConnectivityListener(); // internet dinleyici başlat

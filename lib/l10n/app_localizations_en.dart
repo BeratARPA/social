@@ -9,17 +9,20 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get email => 'E-Mail';
+  String get emailOrUsername => 'E-Mail or username';
 
   @override
   String get password => 'Password';
 
   @override
-  String get rememberMe => 'Remember me';
+  String get forgotPassword => 'Forgot password?';
 
   @override
-  String get login => 'Log In';
+  String get login => 'Log in';
 
   @override
-  String get dontHaveAnAccount => 'Don\'t have an account? Sign Up';
+  String get or => 'OR';
+
+  @override
+  String get createNewAccount => 'Create new account';
 }

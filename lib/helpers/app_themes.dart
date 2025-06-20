@@ -35,7 +35,7 @@ class AppThemes {
     ),
     inputDecorationTheme: const InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.lightSurface,
+      fillColor: AppColors.lightBackground,
       border: OutlineInputBorder(
         borderSide: BorderSide(color: AppColors.lightBorder),
       ),

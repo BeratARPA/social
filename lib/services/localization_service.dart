@@ -7,23 +7,23 @@ class LocalizationService extends BaseViewModel {
 
   Locale? get locale => _locale;
 
-  void loadLocale() {
+  Future<void> loadLocale() async {
     final code = AppStorage.getString(AppStorage.localeKey);
     if (code != null) {
       _locale = Locale(code);
-      safeNotifyListeners();
+      notifyListeners();
     }
   }
 
   Future<void> setLocale(Locale locale) async {
     _locale = locale;
     await AppStorage.setString(AppStorage.localeKey, locale.languageCode);
-    safeNotifyListeners();
+    notifyListeners();
   }
 
   Future<void> clearLocale() async {
     _locale = null;
     await AppStorage.remove(AppStorage.localeKey);
-    safeNotifyListeners();
+    notifyListeners();
   }
 }

@@ -9,17 +9,20 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get email => 'E-Posta';
+  String get emailOrUsername => 'E-Posta veya kullanıcı adı';
 
   @override
   String get password => 'Şifre';
 
   @override
-  String get rememberMe => 'Beni Hatırla';
+  String get forgotPassword => 'Şifreni mi unuttun?';
 
   @override
-  String get login => 'Giriş Yap';
+  String get login => 'Giriş yap';
 
   @override
-  String get dontHaveAnAccount => 'Hesabınız yok mu? Kayıt Olun';
+  String get or => 'YA DA';
+
+  @override
+  String get createNewAccount => 'Yeni hesap oluştur';
 }

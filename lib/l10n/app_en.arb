@@ -1,7 +1,8 @@
 {
-  "email": "E-Mail",
+  "emailOrUsername": "E-Mail or username",
   "password": "Password",
-  "rememberMe": "Remember me",
-  "login": "Log In",
-  "dontHaveAnAccount": "Don't have an account? Sign Up"
+  "forgotPassword": "Forgot password?",
+  "login": "Log in",
+  "or": "OR",
+  "createNewAccount": "Create new account"
 }

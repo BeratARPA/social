@@ -1,7 +1,8 @@
 {
-  "email": "E-Posta",
+  "emailOrUsername": "E-Posta veya kullanıcı adı",
   "password": "Şifre",
-  "rememberMe": "Beni Hatırla",
-  "login": "Giriş Yap",
-  "dontHaveAnAccount": "Hesabınız yok mu? Kayıt Olun"
+  "forgotPassword": "Şifreni mi unuttun?",
+  "login": "Giriş yap",
+  "or": "YA DA",
+  "createNewAccount": "Yeni hesap oluştur"
 }

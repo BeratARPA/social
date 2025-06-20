@@ -37,6 +37,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
   late bool _obscureText;
   bool _hasContent = false;
 
+  late final VoidCallback _controllerListener;
+
   @override
   void initState() {
     super.initState();
@@ -44,15 +46,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _controller = widget.controller ?? TextEditingController();
     _updateContentStatus(); // ilk durum güncellemesi
 
-    _controller.addListener(() {
+    _controllerListener = () {
+      if (!mounted) return;
       setState(() {
         _hasContent = _controller.text.isNotEmpty;
       });
-    });
+    };
+    _controller.addListener(_controllerListener);
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_controllerListener);
     if (widget.controller == null) {
       _controller.dispose();
     }

@@ -4,6 +4,8 @@ import 'package:social/helpers/app_storage.dart';
 import 'package:social/view_models/general/base_viewmodel.dart';
 
 class ThemeService extends BaseViewModel {
+  static AppThemeMode currentThemeMode = AppThemeMode.system;
+
   AppThemeMode _themeMode = AppThemeMode.system;
 
   AppThemeMode get themeMode => _themeMode;
@@ -19,7 +21,7 @@ class ThemeService extends BaseViewModel {
     }
   }
 
-  void loadTheme() {
+  Future<void> loadTheme() async {
     final saved = AppStorage.getString(AppStorage.themeKey) ?? 'system';
 
     _themeMode = AppThemeMode.values.firstWhere(
@@ -27,12 +29,15 @@ class ThemeService extends BaseViewModel {
       orElse: () => AppThemeMode.system,
     );
 
-    safeNotifyListeners();
+    currentThemeMode = _themeMode;
+
+    notifyListeners();
   }
 
   Future<void> setTheme(AppThemeMode mode) async {
     _themeMode = mode;
+    currentThemeMode = mode;
     await AppStorage.setString(AppStorage.themeKey, mode.name);
-    safeNotifyListeners();
+    notifyListeners();
   }
 }

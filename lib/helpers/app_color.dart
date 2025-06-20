@@ -29,13 +29,13 @@ class AppColors {
 
   // Gradients
   static const Gradient lightGradient = LinearGradient(
-    colors: [Color(0xFFEAF6FF), Color(0xFFC6E4F5)],
+    colors: [lightBackground, lightShadow, lightDisabled],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const Gradient darkGradient = LinearGradient(
-    colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+    colors: [darkBackground, darkShadow, darkDisabled],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

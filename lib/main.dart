@@ -20,13 +20,19 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AppStorage.init();
 
+  final themeService = ThemeService();
+  await themeService.loadTheme();
+
+  final localizationService = LocalizationService();
+  await localizationService.loadLocale();
+
   runApp(
     MultiProvider(
       providers: [
         Provider(create: (context) => AuthService()),
 
-        ChangeNotifierProvider(create: (context) => LocalizationService()),
-        ChangeNotifierProvider(create: (context) => ThemeService()),
+        ChangeNotifierProvider.value(value: themeService),
+        ChangeNotifierProvider.value(value: localizationService),
         ChangeNotifierProvider(
           create: (context) => AuthViewModel(context.read<AuthService>()),
         ),
@@ -42,11 +48,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeService = Provider.of<ThemeService>(context);
-    themeService.loadTheme();
-
-    final localizationService = Provider.of<LocalizationService>(context);
-    localizationService.loadLocale();
+    final themeService = Provider.of<ThemeService>(context, listen: true);
+    final localizationService = Provider.of<LocalizationService>(
+      context,
+      listen: true,
+    );
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
