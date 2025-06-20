@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social/l10n/app_localizations.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
 import 'package:social/widgets/custom_elevated_button.dart';
 import 'package:social/widgets/custom_text_field.dart';
@@ -27,12 +28,12 @@ class _LoginViewState extends State<LoginView> {
           children: [
             CustomTextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: "Email"),
+              labelText: AppLocalizations.of(context)!.email,
             ),
             const SizedBox(height: 8),
             CustomTextField(
               controller: passwordController,
-              decoration: const InputDecoration(labelText: "Şifre"),
+              labelText: AppLocalizations.of(context)!.password,
               isPassword: true,
             ),
             const SizedBox(height: 8),
@@ -46,7 +47,7 @@ class _LoginViewState extends State<LoginView> {
                     });
                   },
                 ),
-                const Text("Beni Hatırla"),
+                Text(AppLocalizations.of(context)!.rememberMe),
               ],
             ),
             const SizedBox(height: 16),
@@ -62,12 +63,12 @@ class _LoginViewState extends State<LoginView> {
                       if (viewModel.isAuthenticated) {}
                     };
               },
-              buttonText: "Giriş Yap",
+              buttonText: AppLocalizations.of(context)!.login,
             ),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () {},
-              child: const Text("Hesabınız yok mu? Kayıt Olun"),
+              child: Text(AppLocalizations.of(context)!.dontHaveAnAccount),
             ),
           ],
         ),

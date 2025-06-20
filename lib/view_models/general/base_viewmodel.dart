@@ -13,9 +13,6 @@ class BaseViewModel extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  bool _darkMode = false;
-  bool get isDarkMode => _darkMode;
-
   void log(String message) {
     debugPrint('[${runtimeType.toString()}]: $message');
   }
@@ -88,11 +85,6 @@ class BaseViewModel extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     super.dispose();
-  }
-
-  void toggleTheme() {
-    _darkMode = !_darkMode;
-    safeNotifyListeners();
   }
 
   void resetAll() {
