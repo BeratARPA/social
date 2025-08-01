@@ -13,6 +13,7 @@ import 'package:social/services/localization_service.dart';
 import 'package:social/services/theme_service.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
 import 'package:social/views/auth/login_view.dart';
+import 'package:social/views/auth/register_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,7 +73,10 @@ class MainApp extends StatelessWidget {
 
       navigatorKey: AppNavigator.navigatorKey,
       initialRoute: "/login",
-      routes: {"/login": (context) => const LoginView()},
+      routes: {
+        "/login": (context) => const LoginView(),
+        "/register": (context) => const RegisterView(),
+      },
     );
   }
 }

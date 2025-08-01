@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get emailOrUsername => 'E-Mail or username';
+  String get email => 'E-Mail';
 
   @override
   String get password => 'Password';
@@ -25,4 +25,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createNewAccount => 'Create new account';
+
+  @override
+  String get alreadyHaveAccount => 'Do you already have an account?';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
 }

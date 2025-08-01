@@ -1,8 +1,12 @@
 {
-  "emailOrUsername": "E-Mail or username",
+  "email": "E-Mail",
   "password": "Password",
   "forgotPassword": "Forgot password?",
   "login": "Log in",
   "or": "OR",
-  "createNewAccount": "Create new account"
+  "createNewAccount": "Create new account",
+  "alreadyHaveAccount":"Do you already have an account?",
+  "register":"Register",
+  "passwordsDoNotMatch":"Passwords do not match",
+  "confirmPassword":"Confirm Password"
 }

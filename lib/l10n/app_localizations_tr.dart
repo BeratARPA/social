@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get emailOrUsername => 'E-Posta veya kullanıcı adı';
+  String get email => 'E-Posta';
 
   @override
   String get password => 'Şifre';
@@ -25,4 +25,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get createNewAccount => 'Yeni hesap oluştur';
+
+  @override
+  String get alreadyHaveAccount => 'Zaten hesabınız var mı?';
+
+  @override
+  String get register => 'Kayıt ol';
+
+  @override
+  String get passwordsDoNotMatch => 'Şifreler eşleşmiyor';
+
+  @override
+  String get confirmPassword => 'Şifreyi Onayla';
 }

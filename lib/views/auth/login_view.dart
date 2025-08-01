@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/helpers/app_navigator.dart';
 import 'package:social/l10n/app_localizations.dart';
-import 'package:social/services/theme_service.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
-import 'package:social/widgets/custom_elevated_button.dart';
 import 'package:social/widgets/custom_text_field.dart';
 
 class LoginView extends StatefulWidget {
@@ -18,7 +17,6 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +54,7 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 40),
                   CustomTextField(
                     controller: emailController,
-                    hintText: AppLocalizations.of(context)!.emailOrUsername,
+                    hintText: AppLocalizations.of(context)!.email,
                     prefixIcon: Icons.person,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -91,7 +89,12 @@ class _LoginViewState extends State<LoginView> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await viewModel.login(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         // Marka ana tonu
                         shape: RoundedRectangleBorder(
@@ -116,10 +119,11 @@ class _LoginViewState extends State<LoginView> {
                       Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
-
                   const SizedBox(height: 24),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      AppNavigator.pushNamed('/register');
+                    },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
                       side: const BorderSide(color: AppColors.primary),

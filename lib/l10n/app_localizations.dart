@@ -98,11 +98,11 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
-  /// No description provided for @emailOrUsername.
+  /// No description provided for @email.
   ///
   /// In en, this message translates to:
-  /// **'E-Mail or username'**
-  String get emailOrUsername;
+  /// **'E-Mail'**
+  String get email;
 
   /// No description provided for @password.
   ///
@@ -133,6 +133,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create new account'**
   String get createNewAccount;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
 }
 
 class _AppLocalizationsDelegate

@@ -1,8 +1,12 @@
 {
-  "emailOrUsername": "E-Posta veya kullanıcı adı",
+  "email": "E-Posta",
   "password": "Şifre",
   "forgotPassword": "Şifreni mi unuttun?",
   "login": "Giriş yap",
   "or": "YA DA",
-  "createNewAccount": "Yeni hesap oluştur"
+  "createNewAccount": "Yeni hesap oluştur",
+  "alreadyHaveAccount":"Zaten hesabınız var mı?",
+  "register":"Kayıt ol",
+  "passwordsDoNotMatch":"Şifreler eşleşmiyor",
+  "confirmPassword":"Şifreyi Onayla"
 }
