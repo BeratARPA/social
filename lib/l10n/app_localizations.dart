@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
   /// No description provided for @email.
   ///
   /// In en, this message translates to:

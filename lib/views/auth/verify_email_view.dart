@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
-import 'package:social/l10n/app_localizations.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
 import 'package:social/widgets/custom_elevated_button.dart';
-import 'package:social/widgets/custom_text_field.dart';
+import 'package:social/widgets/custom_pinput.dart';
 
-class SendEmailVerificationView extends StatefulWidget {
-  const SendEmailVerificationView({super.key});
+class VerifyEmailView extends StatefulWidget {
+  const VerifyEmailView({super.key});
 
   @override
-  State<SendEmailVerificationView> createState() =>
-      _SendEmailVerificationViewState();
+  State<VerifyEmailView> createState() => _VerifyEmailViewState();
 }
 
-class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
-  final emailController = TextEditingController();
+class _VerifyEmailViewState extends State<VerifyEmailView> {
+  final codeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AuthViewModel>(context);
+
+    final args = ModalRoute.of(context)!.settings.arguments;
+    final email = args is String ? args : null;
 
     return Scaffold(
       body: Container(
@@ -54,29 +55,45 @@ class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       children: [
-                        CustomTextField(
-                          controller: emailController,
-                          hintText: AppLocalizations.of(context)!.email,
-                          prefixIcon: Icons.email,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                        const Text(
+                          "E-Posta adresine gönderilen 6 haneli kodu giriniz.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
+                        CustomPinput(
+                          controller: codeController,
+                          length: 6,
+                          showCursor: false,
+                          obscureText: false,
+                          onCompleted: (pin) {},
+                        ),
+                        const SizedBox(height: 32),
                         SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: CustomElevatedButton(
-                            buttonText: "Gönder",
+                            buttonText: "Doğrula",
                             onPressed: () async {
-                              await viewModel.sendEmailVerification(
-                                emailController.text.trim(),
+                              viewModel.verifyEmail(
+                                email!,
+                                codeController.text.trim(),
                               );
                             },
                           ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Bir kod almadınız mı?"),
+                            TextButton(
+                              onPressed: () async {
+                                viewModel.sendEmailVerification("");
+                              },
+                              child: Text("Tekrar Gönder"),
+                            ),
+                          ],
                         ),
                       ],
                     ),

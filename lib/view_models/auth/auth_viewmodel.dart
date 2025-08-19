@@ -1,50 +1,124 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social/helpers/app_navigator.dart';
-import 'package:social/services/auth_service.dart';
+import 'package:social/services/social_api_service.dart';
 import 'package:social/view_models/general/base_viewmodel.dart';
 
 class AuthViewModel extends BaseViewModel {
-  final AuthService _authService;
+  final SocialApiService _socialApiService;
 
-  User? user;
-
-  AuthViewModel(this._authService) {
-    // Kullanıcı durumunu dinle
-    _authService.userChanges.listen((value) {
-      user = value;
-      notifyListeners();
-    });
-
+  AuthViewModel(this._socialApiService) {
     initConnectivityListener(); // internet dinleyici başlat
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String username, String password) async {
     await runWithInternetCheck(() async {
-      await runAsync(() async {
-        user = await _authService.signIn(email, password);
-        clearError();
-        AppNavigator.showSnack("Giriş başarılı");
-      });
+      if (username.isEmpty || password.isEmpty) {
+        AppNavigator.showSnack("Lütfen tüm alanları doldurun");
+        return;
+      }
+
+      var result = await _socialApiService.login(username, password);
+      if (!result.isSuccess) {
+        AppNavigator.showSnack(result.errorCode!);
+
+        if (result.errorCode == "EmailNotConfirmed") {
+          await AppNavigator.pushNamed("/send-email-verification");
+        }
+        return;
+      }
+
+      clearError();
+      AppNavigator.showSnack("Giriş başarılı");
     });
   }
 
-  Future<void> register(String email, String password) async {
+  Future<void> verifyEmail(String email, String code) async {
     await runWithInternetCheck(() async {
-      await runAsync(() async {
-        user = await _authService.register(email, password);
-        clearError();
-        AppNavigator.showSnack("Kayıt başarılı");
+      if (email.isEmpty || code.isEmpty) {
+        AppNavigator.showSnack("Lütfen tüm alanları doldurun");
+        return;
+      }
+
+      var result = await _socialApiService.verifyEmail(email, code);
+      if (!result.isSuccess) {
+        AppNavigator.showSnack(result.errorCode!);
+        return;
+      }
+
+      clearError();
+      AppNavigator.showSnack("Email doğrulama başarılı");
+      AppNavigator.popUntil((route) => route.isFirst);
+    });
+  }
+
+  Future<void> register(
+    String username,
+    String email,
+    String password,
+    String confirmPassword,
+  ) async {
+    await runWithInternetCheck(() async {
+      if (username.isEmpty ||
+          email.isEmpty ||
+          password.isEmpty ||
+          confirmPassword.isEmpty) {
+        AppNavigator.showSnack("Lütfen tüm alanları doldurun");
+        return;
+      }
+
+      var result = await _socialApiService.register(username, email, password);
+      if (!result.isSuccess) {
+        AppNavigator.showSnack(result.errorCode!);
+
+        if (result.errorCode == "EmailNotConfirmed") {
+          // Özel handling burada
+        }
+        return;
+      }
+
+      clearError();
+      AppNavigator.showSnack("Kayıt başarılı");
+    });
+  }
+
+  bool canResend = true;
+  Future<void> sendEmailVerification(String email) async {
+    await runWithInternetCheck(() async {
+      if (email.isEmpty) {
+        AppNavigator.showSnack("Lütfen tüm alanları doldurun");
+        canResend = true;
+        return;
+      }
+
+      if (!canResend) return;
+      canResend = false;
+
+      var result = await _socialApiService.sendEmailVerification(email);
+      if (!result.isSuccess) {
+        AppNavigator.showSnack(result.errorCode!);
+
+        return;
+      }
+
+      clearError();
+      AppNavigator.showSnack("E-posta doğrulama bağlantısı gönderildi");
+      await AppNavigator.pushNamed("/verify-email", arguments: email);
+
+      // 30 saniye sonra tekrar aktif et
+      Future.delayed(const Duration(seconds: 30), () {
+        canResend = true;
       });
     });
   }
 
   Future<void> logout() async {
-    await runAsync(() async {
-      await _authService.signOut();
-      user = null;
+    await runWithInternetCheck(() async {
+      var result = await _socialApiService.logout();
+      if (!result.isSuccess) {
+        AppNavigator.showSnack(result.errorCode!);
+        return;
+      }
+
       AppNavigator.showSnack("Çıkış yapıldı");
     });
   }
-
-  bool get isAuthenticated => user != null;
 }

@@ -9,6 +9,9 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get username => 'Kullanıcı Adı';
+
+  @override
   String get email => 'E-Posta';
 
   @override

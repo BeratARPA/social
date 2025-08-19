@@ -4,6 +4,7 @@ import 'package:social/helpers/app_color.dart';
 class AppThemes {
   // Light Theme
   static final ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightBackground,
     fontFamily: "Montserrat",
@@ -58,6 +59,7 @@ class AppThemes {
 
   // Dark Theme
   static final ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.darkBackground,
     fontFamily: "Montserrat",

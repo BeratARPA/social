@@ -1,4 +1,5 @@
 {
+  "username": "Kullanıcı Adı",
   "email": "E-Posta",
   "password": "Şifre",
   "forgotPassword": "Şifreni mi unuttun?",

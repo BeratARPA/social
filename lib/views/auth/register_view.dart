@@ -7,16 +7,18 @@ import 'package:social/l10n/app_localizations.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
 import 'package:social/widgets/custom_text_field.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +69,18 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const SizedBox(height: 16),
                         CustomTextField(
+                          controller: emailController,
+                          hintText: AppLocalizations.of(context)!.email,
+                          prefixIcon: Icons.email,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        CustomTextField(
                           controller: passwordController,
                           hintText: AppLocalizations.of(context)!.password,
                           prefixIcon: Icons.lock,
@@ -79,12 +93,16 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              AppLocalizations.of(context)!.forgotPassword,
+                        CustomTextField(
+                          controller: confirmPasswordController,
+                          hintText:
+                              AppLocalizations.of(context)!.confirmPassword,
+                          prefixIcon: Icons.lock_outline,
+                          isPassword: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
                             ),
                           ),
                         ),
@@ -94,19 +112,20 @@ class _LoginViewState extends State<LoginView> {
                           height: 48,
                           child: ElevatedButton(
                             onPressed: () async {
-                              await viewModel.login(
+                              await viewModel.register(
                                 usernameController.text.trim(),
+                                emailController.text.trim(),
                                 passwordController.text.trim(),
+                                confirmPasswordController.text.trim(),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              // Marka ana tonu
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             child: Text(
-                              AppLocalizations.of(context)!.login,
+                              AppLocalizations.of(context)!.register,
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -115,36 +134,20 @@ class _LoginViewState extends State<LoginView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(child: Divider(thickness: 1)),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
+                            Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.alreadyHaveAccount,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                AppNavigator.pop(); // veya pushNamed('/login');
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.login,
                               ),
-                              child: Text(AppLocalizations.of(context)!.or),
                             ),
-                            Expanded(child: Divider(thickness: 1)),
                           ],
-                        ),
-                        const SizedBox(height: 16),
-                        OutlinedButton(
-                          onPressed: () async {
-                            AppNavigator.pushNamed('/register');
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(color: AppColors.primary),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 14,
-                              horizontal: 24,
-                            ),
-                          ),
-                          child: Text(
-                            AppLocalizations.of(context)!.createNewAccount,
-                            style: TextStyle(fontSize: 16),
-                          ),
                         ),
                       ],
                     ),
