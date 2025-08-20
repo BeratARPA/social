@@ -17,6 +17,12 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   final codeController = TextEditingController();
 
   @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AuthViewModel>(context);
 
@@ -89,7 +95,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                             Text("Bir kod almadınız mı?"),
                             TextButton(
                               onPressed: () async {
-                                viewModel.sendEmailVerification("");
+                                viewModel.resendEmailVerification(email!);
                               },
                               child: Text("Tekrar Gönder"),
                             ),

@@ -19,6 +19,12 @@ class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
   final emailController = TextEditingController();
 
   @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AuthViewModel>(context);
 
@@ -48,12 +54,19 @@ class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
                   color: AppColors.primary,
                 ),
               ),
+
               Expanded(
                 child: Center(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       children: [
+                        const Text(
+                          "E-Posta adresinizi girin, kod göndereceğiz.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(height: 24),
                         CustomTextField(
                           controller: emailController,
                           hintText: AppLocalizations.of(context)!.email,
