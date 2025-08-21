@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/helpers/app_constant.dart';
 import 'package:social/helpers/app_navigator.dart';
 import 'package:social/l10n/app_localizations.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
@@ -17,7 +18,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  
+
   @override
   void dispose() {
     usernameController.dispose();
@@ -43,13 +44,13 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   const SizedBox(height: 32),
                   Image.asset(
-                    'assets/images/app_logo_foreground.png',
+                    AppConstant.brandLogoPath,
                     width: 150,
                     height: 150,
                     fit: BoxFit.fill,
                   ),
-                  const Text(
-                    'SOCIAL',
+                  Text(
+                    AppConstant.brandName,
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppNavigator {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   static BuildContext? get context => navigatorKey.currentContext;
 
@@ -74,7 +75,15 @@ class AppNavigator {
   }
 
   static void showSnack(String message) {
-    ScaffoldMessenger.of(context!).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context!).showSnackBar(
+      SnackBar(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        behavior: SnackBarBehavior.floating,
+        content: Text(message),
+      ),
+    );
   }
 
   static void clearSnackbars() {
