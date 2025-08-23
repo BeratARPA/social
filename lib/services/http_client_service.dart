@@ -77,7 +77,7 @@ class HttpClientService {
       }
     } catch (error) {
       return ApiResult.failure(
-        "unexpected_error",
+        error.toString(),
         500,
         "",
         details: error.toString(),

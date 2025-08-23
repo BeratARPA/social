@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social/extensions/theme_extension.dart';
+import 'package:social/helpers/app_color.dart';
 
 class AppNavigator {
   static final GlobalKey<NavigatorState> navigatorKey =
@@ -77,11 +79,21 @@ class AppNavigator {
   static void showSnack(String message) {
     ScaffoldMessenger.of(context!).showSnackBar(
       SnackBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+        backgroundColor: context!.themeValue(
+          light: AppColors.lightBackground,
+          dark: AppColors.darkBackground,
         ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         behavior: SnackBarBehavior.floating,
-        content: Text(message),
+        content: Text(
+          message,
+          style: TextStyle(
+            color: context!.themeValue(
+              light: AppColors.lightText,
+              dark: AppColors.darkText,
+            ),
+          ),
+        ),
       ),
     );
   }

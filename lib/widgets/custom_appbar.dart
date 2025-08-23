@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social/extensions/theme_extension.dart';
@@ -20,12 +19,20 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: const Icon(FontAwesomeIcons.heart),
+          color: context.themeValue(
+            light: AppColors.lightText,
+            dark: AppColors.darkText,
+          ),
           onPressed: () {
             AppNavigator.showSnack("Liked!");
           },
         ),
         IconButton(
-          icon: const Icon(FontAwesomeIcons.message),
+          icon: const Icon(FontAwesomeIcons.envelope),
+           color: context.themeValue(
+            light: AppColors.lightText,
+            dark: AppColors.darkText,
+          ),
           onPressed: () {
             AppNavigator.showDialog(
               barrierDismissible: false,
