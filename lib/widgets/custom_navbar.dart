@@ -24,37 +24,35 @@ class CustomNavbar extends StatelessWidget {
             dark: AppColors.darkBackground,
           ),
         ),
-        child: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _CustomNavItem(
-                icon: FontAwesomeIcons.house,
-                isSelected: currentIndex == 0,
-                onTap: () => onTabChanged(0),
-              ),
-              _CustomNavItem(
-                icon: FontAwesomeIcons.magnifyingGlass,
-                isSelected: currentIndex == 1,
-                onTap: () => onTabChanged(1),
-              ),
-              _CustomNavItem(
-                icon: FontAwesomeIcons.squarePlus,
-                isSelected: currentIndex == 2,
-                onTap: () => onTabChanged(2),
-              ),
-              _CustomNavItem(
-                icon: FontAwesomeIcons.circlePlay,
-                isSelected: currentIndex == 3,
-                onTap: () => onTabChanged(3),
-              ),
-              _CustomNavItem(
-                icon: FontAwesomeIcons.user,
-                isSelected: currentIndex == 4,
-                onTap: () => onTabChanged(4),
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _CustomNavItem(
+              icon: FontAwesomeIcons.house,
+              isSelected: currentIndex == 0,
+              onTap: () => onTabChanged(0),
+            ),
+            _CustomNavItem(
+              icon: FontAwesomeIcons.magnifyingGlass,
+              isSelected: currentIndex == 1,
+              onTap: () => onTabChanged(1),
+            ),
+            _CustomNavItem(
+              icon: FontAwesomeIcons.squarePlus,
+              isSelected: currentIndex == 2,
+              onTap: () => onTabChanged(2),
+            ),
+            _CustomNavItem(
+              icon: FontAwesomeIcons.circlePlay,
+              isSelected: currentIndex == 3,
+              onTap: () => onTabChanged(3),
+            ),
+            _CustomNavItem(
+              icon: FontAwesomeIcons.user,
+              isSelected: currentIndex == 4,
+              onTap: () => onTabChanged(4),
+            ),
+          ],
         ),
       ),
     );
@@ -74,9 +72,9 @@ class _CustomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
+      borderRadius: BorderRadius.circular(50),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: FaIcon(

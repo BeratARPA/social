@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/widgets/custom_poll.dart';
+import 'package:social/widgets/custom_profile.dart';
 import 'package:social/widgets/custom_video_player.dart';
 
 enum MediaType { image, video, poll }
@@ -108,21 +109,6 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  String _getTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays}g';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}s';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}d';
-    } else {
-      return 'şimdi';
-    }
-  }
-
   String _formatCount(int count) {
     if (count >= 1000000) {
       return '${(count / 1000000).toStringAsFixed(1)}M';
@@ -155,108 +141,17 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => widget.onUserTap?.call(widget.post.user.id),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundImage:
-                  widget.post.user.profilePicture != null
-                      ? AssetImage(widget.post.user.profilePicture!)
-                      : null,
-              backgroundColor: Colors.grey.shade300,
-              child:
-                  widget.post.user.profilePicture == null
-                      ? Text(
-                        widget.post.user.displayName[0].toUpperCase(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: context.themeValue(
-                            light: AppColors.lightText,
-                            dark: AppColors.darkText,
-                          ),
-                        ),
-                      )
-                      : null,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => widget.onUserTap?.call(widget.post.user.id),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        widget.post.user.displayName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: context.themeValue(
-                            light: AppColors.lightText,
-                            dark: AppColors.darkText,
-                          ),
-                        ),
-                      ),
-                      if (widget.post.user.isVerified) ...[
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.verified,
-                          size: 14,
-                          color: Colors.blue.shade600,
-                        ),
-                      ],
-                    ],
-                  ),
-                  Text(
-                    '@${widget.post.user.username}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: context.themeValue(
-                        light: AppColors.lightSecondaryText,
-                        dark: AppColors.darkSecondaryText,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Text(
-            _getTimeAgo(widget.post.createdAt),
-            style: TextStyle(
-              fontSize: 12,
-              color: context.themeValue(
-                light: AppColors.lightSecondaryText,
-                dark: AppColors.darkSecondaryText,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: () {
-              // More options menu
-              _showMoreOptions(context);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                Icons.more_vert,
-                size: 18,
-                color: context.themeValue(
-                  light: AppColors.lightText,
-                  dark: AppColors.darkText,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return CustomProfile(
+      displayName: widget.post.user.displayName,
+      username: widget.post.user.username,
+      profilePicture: widget.post.user.profilePicture,
+      isVerified: widget.post.user.isVerified,
+      createdAt: widget.post.createdAt,
+      layout: ProfileLayout.horizontal,
+      displayMode: ProfileDisplayMode.full,
+      showMoreButton: true,
+      onTap: () => print("User tapped"),
+      onMoreTap: () => _showMoreOptions(context),
     );
   }
 

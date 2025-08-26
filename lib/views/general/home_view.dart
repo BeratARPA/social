@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social/extensions/theme_extension.dart';
+import 'package:social/helpers/app_color.dart';
 import 'package:social/helpers/app_navigator.dart';
+import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_appbar.dart';
-import 'package:social/widgets/custom_navbar.dart';
 import 'package:social/widgets/post_card.dart';
 import 'package:social/widgets/story_list.dart';
 
@@ -116,40 +119,53 @@ class _HomeViewState extends State<HomeView> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppbar(),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            StoryList(
-              users: [
-                "BeratARPA",
-                "Emma",
-                "Alex",
-                "Lisa",
-                "Michael",
-                "Sophia",
-                "David",
-              ],
-              onAddStory: () {
-                AppNavigator.pushNamed("/create-story");
-              },
-              onStoryTap: (userId) {
-                AppNavigator.pushNamed("/story-viewer", arguments: userId);
-              },
+    return MainLayoutView(
+      appBar: CustomAppbar(
+        actions: [
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.heart),
+            color: context.themeValue(
+              light: AppColors.lightText,
+              dark: AppColors.darkText,
             ),
-
-            ...posts.map((post) => PostCard(post: post)),
-          ],
-        ),
+            onPressed: () {
+              AppNavigator.pushNamed("/notification");
+            },
+          ),
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.envelope),
+            color: context.themeValue(
+              light: AppColors.lightText,
+              dark: AppColors.darkText,
+            ),
+            onPressed: () {
+              AppNavigator.pushNamed("/inbox");
+            },
+          ),
+        ],
       ),
-      bottomNavigationBar: CustomNavbar(
-        currentIndex: currentIndex,
-        onTabChanged: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+      body: ListView(
+        children: [
+          StoryList(
+            users: [
+              "BeratARPA",
+              "Emma",
+              "Alex",
+              "Lisa",
+              "Michael",
+              "Sophia",
+              "David",
+            ],
+            onAddStory: () {
+              AppNavigator.pushNamed("/create-story");
+            },
+            onStoryTap: (userId) {
+              AppNavigator.pushNamed("/story-viewer", arguments: userId);
+            },
+          ),
+
+          ...posts.map((post) => PostCard(post: post)),
+        ],
       ),
     );
   }

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
-import 'package:social/helpers/app_constant.dart';
 
 class StoryList extends StatelessWidget {
   final List<String> users;
-
-  // 📌 Callback’ler
   final void Function(String userId)? onStoryTap;
   final VoidCallback? onAddStory;
 
@@ -23,111 +20,130 @@ class StoryList extends StatelessWidget {
       height: 110,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        itemCount: users.length + 1, // +1 kendi hikayemiz için
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: users.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
-            // 📌 İlk item: Your Story
-            return GestureDetector(
-              onTap: onAddStory,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(
-                            AppConstant.brandLogoPath,
-                          ),
-                          radius: 40,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blue,
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    SizedBox(
-                      width: 70,
-                      child: Text(
-                        "Hikayem",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: context.themeValue(
-                            light: AppColors.lightText,
-                            dark: AppColors.darkText,
-                          ),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return _buildAddStoryItem(context);
           }
 
-          // 📌 Diğer story’ler
           final user = users[index - 1];
-          return GestureDetector(
-            onTap: () => onStoryTap?.call(user), // Story tap event
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(2), // Story halkası efekti
+          return _buildStoryItem(context, user);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAddStoryItem(BuildContext context) {
+    return GestureDetector(
+      onTap: onAddStory,
+      child: Container(
+        width: 70,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/app_logo.png"),
+                  radius: 35,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    width: 20,
+                    height: 20,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        colors: [Colors.purple, Colors.red, Colors.orange],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(AppConstant.brandLogoPath),
-                      radius: 40,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: 70,
-                    child: Text(
-                      user,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
+                      color: AppColors.primary,
+                      border: Border.all(
                         color: context.themeValue(
-                          light: AppColors.lightText,
-                          dark: AppColors.darkText,
+                          light: AppColors.lightBackground,
+                          dark: AppColors.darkBackground,
                         ),
-                        fontSize: 12,
+                        width: 2,
                       ),
                     ),
+                    child: const Icon(Icons.add, color: Colors.white, size: 14),
                   ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Hikayem",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: context.themeValue(
+                  light: AppColors.lightText,
+                  dark: AppColors.darkText,
+                ),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          );
-        },
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoryItem(BuildContext context, String user) {
+    return GestureDetector(
+      onTap: () => onStoryTap?.call(user),
+      child: Container(
+        width: 70,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Story border effekti için Container
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary,
+                    AppColors.accent,
+                    AppColors.darkDisabled,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/app_logo.png"),
+                  radius: 35,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              user,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: context.themeValue(
+                  light: AppColors.lightText,
+                  dark: AppColors.darkText,
+                ),
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

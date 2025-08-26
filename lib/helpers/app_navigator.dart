@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/views/auth/login_view.dart';
+import 'package:social/views/auth/register_view.dart';
+import 'package:social/views/auth/send_email_verification_view.dart';
+import 'package:social/views/auth/verify_email_view.dart';
+import 'package:social/views/general/create_story_view.dart';
+import 'package:social/views/general/home_view.dart';
+import 'package:social/views/general/inbox_view.dart';
+import 'package:social/views/general/notification_view.dart';
+import 'package:social/views/general/story_viewer_view.dart';
 
 class AppNavigator {
+  static Map<String, Widget Function(BuildContext)> routes = {
+    "/inbox": (context) => const InboxView(),
+    "/notification": (context) => const NotificationView(),
+    "/home": (context) => const HomeView(),
+    "/story-viewer": (context) => const StoryViewerView(),
+    "/create-story": (context) => const CreateStoryView(),
+    "/login": (context) => const LoginView(),
+    "/register": (context) => const RegisterView(),
+    "/send-email-verification": (context) => const SendEmailVerificationView(),
+    "/verify-email": (context) => const VerifyEmailView(),
+  };
+
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 

@@ -12,13 +12,6 @@ import 'package:social/services/localization_service.dart';
 import 'package:social/services/social_api_service.dart';
 import 'package:social/services/theme_service.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
-import 'package:social/views/auth/login_view.dart';
-import 'package:social/views/auth/register_view.dart';
-import 'package:social/views/auth/send_email_verification_view.dart';
-import 'package:social/views/auth/verify_email_view.dart';
-import 'package:social/views/general/create_story_view.dart';
-import 'package:social/views/general/home_view.dart';
-import 'package:social/views/general/story_viewer_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,16 +71,7 @@ class MainApp extends StatelessWidget {
 
       navigatorKey: AppNavigator.navigatorKey,
       initialRoute: "/login",
-      routes: {
-        "/home": (context) => const HomeView(),
-        "/story-viewer": (context) => const StoryViewerView(),
-        "/create-story": (context) => const CreateStoryView(),
-        "/login": (context) => const LoginView(),
-        "/register": (context) => const RegisterView(),
-        "/send-email-verification":
-            (context) => const SendEmailVerificationView(),
-        "/verify-email": (context) => const VerifyEmailView(),
-      },
+      routes: AppNavigator.routes,
     );
   }
 }

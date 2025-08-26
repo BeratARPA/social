@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_story_viewer.dart';
 
 class StoryViewerView extends StatefulWidget {
@@ -11,6 +12,10 @@ class StoryViewerView extends StatefulWidget {
 class _StoryViewerViewState extends State<StoryViewerView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: CustomStoryViewer());
+    return MainLayoutView(
+      showAppBar: false,
+      showNavbar: false,
+      body: CustomStoryViewer(),
+    );
   }
 }

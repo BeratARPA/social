@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:social/helpers/app_color.dart';
 import 'package:social/helpers/app_navigator.dart';
+import 'package:social/widgets/custom_profile.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 class CustomStoryViewer extends StatefulWidget {
-  CustomStoryViewer({super.key});
+  const CustomStoryViewer({super.key});
 
   @override
   State<CustomStoryViewer> createState() => _CustomStoryViewerState();
@@ -22,40 +22,15 @@ class _CustomStoryViewerState extends State<CustomStoryViewer> {
   }
 
   Widget _buildProfileView() {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () => print("Profile tapped"),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 15,
-                backgroundImage: AssetImage("assets/images/app_logo.png"),
-                backgroundColor: Colors.grey.shade300,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                "BeratARPA",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.darkText,
-                ),
-              ),
-              const SizedBox(width: 5),
-              Icon(Icons.verified, size: 14, color: Colors.blue.shade600),
-              const SizedBox(width: 10),
-              Text(
-                "35d",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.lightSecondaryText,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+    return CustomProfile(
+      displayName: "Berat ARPA",
+      username: "BeratARPA",
+      profilePicture: "assets/images/app_logo.png",
+      isVerified: true,
+      showMoreButton: true,
+      createdAt: DateTime(2025, 8, 26),
+      displayMode: ProfileDisplayMode.full,
+      crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 
