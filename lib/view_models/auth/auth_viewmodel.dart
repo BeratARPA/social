@@ -46,7 +46,6 @@ class AuthViewModel extends BaseViewModel {
       }
 
       clearError();
-      AppNavigator.showSnack("Giriş başarılı");
       AppNavigator.pushReplacementNamed("/home");
     });
   }

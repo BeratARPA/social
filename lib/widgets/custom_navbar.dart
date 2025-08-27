@@ -2,55 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/helpers/app_navigator.dart';
 
 class CustomNavbar extends StatelessWidget {
-  final Function(int) onTabChanged;
   final int currentIndex;
 
-  const CustomNavbar({
-    super.key,
-    required this.onTabChanged,
-    this.currentIndex = 0,
-  });
+  const CustomNavbar({super.key, this.currentIndex = 0});
+
+  void _navigate(int index) {
+    switch (index) {
+      case 0:
+        AppNavigator.pushReplacementNamed("/home");
+        break;
+      case 1:
+        AppNavigator.pushReplacementNamed("/explore");
+        break;
+      case 2:
+        AppNavigator.pushNamed("/create-story");
+        break;
+      case 3:
+        AppNavigator.pushReplacementNamed("/videos");
+        break;
+      case 4:
+        AppNavigator.pushReplacementNamed("/profile");
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
+      child: SizedBox(
         height: 50,
-        decoration: BoxDecoration(
-          color: context.themeValue(
-            light: AppColors.lightBackground,
-            dark: AppColors.darkBackground,
-          ),
-        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _CustomNavItem(
               icon: FontAwesomeIcons.house,
               isSelected: currentIndex == 0,
-              onTap: () => onTabChanged(0),
+              onTap: () => _navigate(0),
             ),
             _CustomNavItem(
               icon: FontAwesomeIcons.magnifyingGlass,
               isSelected: currentIndex == 1,
-              onTap: () => onTabChanged(1),
+              onTap: () => _navigate(1),
             ),
             _CustomNavItem(
               icon: FontAwesomeIcons.squarePlus,
               isSelected: currentIndex == 2,
-              onTap: () => onTabChanged(2),
+              onTap: () => _navigate(2),
             ),
             _CustomNavItem(
               icon: FontAwesomeIcons.circlePlay,
               isSelected: currentIndex == 3,
-              onTap: () => onTabChanged(3),
+              onTap: () => _navigate(3),
             ),
             _CustomNavItem(
               icon: FontAwesomeIcons.user,
               isSelected: currentIndex == 4,
-              onTap: () => onTabChanged(4),
+              onTap: () => _navigate(4),
             ),
           ],
         ),

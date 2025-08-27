@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/helpers/app_color.dart';
 import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_appbar.dart';
 import 'package:social/widgets/custom_profile.dart';
@@ -42,7 +43,10 @@ class _InboxViewState extends State<InboxView> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Spacer(),
-                Text("İstekler", style: TextStyle(fontSize: 16)),
+                Text(
+                  "İstekler",
+                  style: TextStyle(fontSize: 16, color: AppColors.primary),
+                ),
               ],
             ),
             const SizedBox(height: 16.0),
@@ -57,7 +61,7 @@ class _InboxViewState extends State<InboxView> {
               ),
               title: const Text("Message 1"),
               subtitle: const Text("This is the first message."),
-              trailing: Text("2m"),
+              trailing: Text("5m"),
               onTap: () {
                 // Handle message tap
               },

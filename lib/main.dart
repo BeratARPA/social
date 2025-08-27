@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:social/firebase_options.dart';
@@ -15,6 +16,22 @@ import 'package:social/view_models/auth/auth_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // dikey yukarı
+    DeviceOrientation.portraitDown, // dikey aşağı
+  ]);
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+  );
+
+  SystemChrome.setApplicationSwitcherDescription(
+    const ApplicationSwitcherDescription(
+      label: 'SOCIAL',
+      primaryColor: 0xFF2196F3, // mavi
+    ),
+  );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AppStorage.init();

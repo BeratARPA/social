@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:social/widgets/custom_appbar.dart';
 import 'package:social/widgets/custom_navbar.dart';
 
-class MainLayoutView extends StatelessWidget {
+class MainLayoutView extends StatefulWidget {
   final Widget body;
   final String? title;
   final CustomAppbar? appBar;
   final bool showAppBar;
   final bool showNavbar;
   final int currentIndex;
-  final Function(int)? onTabChanged;
 
   const MainLayoutView({
     super.key,
@@ -19,20 +18,24 @@ class MainLayoutView extends StatelessWidget {
     this.showAppBar = true,
     this.showNavbar = true,
     this.currentIndex = 0,
-    this.onTabChanged,
   });
 
   @override
+  State<MainLayoutView> createState() => _MainLayoutViewState();
+}
+
+class _MainLayoutViewState extends State<MainLayoutView> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: showAppBar ? (appBar ?? CustomAppbar(title: title)) : null,
-      body: SafeArea(child: body),
+      appBar:
+          widget.showAppBar
+              ? (widget.appBar ?? CustomAppbar(title: widget.title))
+              : null,
+      body: SafeArea(child: widget.body),
       bottomNavigationBar:
-          showNavbar
-              ? CustomNavbar(
-                currentIndex: currentIndex,
-                onTabChanged: onTabChanged ?? (_) {},
-              )
+          widget.showNavbar
+              ? CustomNavbar(currentIndex: widget.currentIndex)
               : null,
     );
   }

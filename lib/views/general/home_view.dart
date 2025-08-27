@@ -116,11 +116,12 @@ class _HomeViewState extends State<HomeView> {
     ),
   ];
 
-  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return MainLayoutView(
+      currentIndex: 0,
       appBar: CustomAppbar(
+        showLeading: false,
         actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.heart),

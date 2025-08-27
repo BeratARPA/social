@@ -6,6 +6,7 @@ import 'package:social/views/auth/register_view.dart';
 import 'package:social/views/auth/send_email_verification_view.dart';
 import 'package:social/views/auth/verify_email_view.dart';
 import 'package:social/views/general/create_story_view.dart';
+import 'package:social/views/general/explore_view.dart';
 import 'package:social/views/general/home_view.dart';
 import 'package:social/views/general/inbox_view.dart';
 import 'package:social/views/general/notification_view.dart';
@@ -13,6 +14,7 @@ import 'package:social/views/general/story_viewer_view.dart';
 
 class AppNavigator {
   static Map<String, Widget Function(BuildContext)> routes = {
+    "/explore": (context) =>  ExploreView(),
     "/inbox": (context) => const InboxView(),
     "/notification": (context) => const NotificationView(),
     "/home": (context) => const HomeView(),
