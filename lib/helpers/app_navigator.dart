@@ -14,7 +14,7 @@ import 'package:social/views/general/story_viewer_view.dart';
 
 class AppNavigator {
   static Map<String, Widget Function(BuildContext)> routes = {
-    "/explore": (context) =>  ExploreView(),
+    "/explore": (context) => const ExploreView(),
     "/inbox": (context) => const InboxView(),
     "/notification": (context) => const NotificationView(),
     "/home": (context) => const HomeView(),

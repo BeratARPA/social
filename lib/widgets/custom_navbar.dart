@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/helpers/app_navigator.dart';
@@ -38,27 +37,27 @@ class CustomNavbar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _CustomNavItem(
-              icon: FontAwesomeIcons.house,
+              icon: Icons.home_outlined,
               isSelected: currentIndex == 0,
               onTap: () => _navigate(0),
             ),
             _CustomNavItem(
-              icon: FontAwesomeIcons.magnifyingGlass,
+              icon: Icons.explore_outlined,
               isSelected: currentIndex == 1,
               onTap: () => _navigate(1),
             ),
             _CustomNavItem(
-              icon: FontAwesomeIcons.squarePlus,
+              icon: Icons.add_box_outlined,
               isSelected: currentIndex == 2,
               onTap: () => _navigate(2),
             ),
             _CustomNavItem(
-              icon: FontAwesomeIcons.circlePlay,
+              icon: Icons.play_circle_outline,
               isSelected: currentIndex == 3,
               onTap: () => _navigate(3),
             ),
             _CustomNavItem(
-              icon: FontAwesomeIcons.user,
+              icon: Icons.person_outline,
               isSelected: currentIndex == 4,
               onTap: () => _navigate(4),
             ),
@@ -87,7 +86,8 @@ class _CustomNavItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(50),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: FaIcon(
+        child: Icon(
+          size: 28,
           icon,
           color:
               isSelected

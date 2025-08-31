@@ -272,7 +272,7 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
             // Handle poll vote
             print('Poll vote: option $optionIndex');
           },
-        );
+        );      
     }
   }
 
