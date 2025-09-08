@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/helpers/app_navigator.dart';
 import 'package:social/views/general/main_layout_view.dart';
-import 'package:social/widgets/custom_appbar.dart';
 import 'package:social/widgets/custom_profile.dart';
 import 'package:social/widgets/custom_text_field.dart';
 
@@ -17,7 +18,15 @@ class _InboxViewState extends State<InboxView> {
   Widget build(BuildContext context) {
     return MainLayoutView(
       showNavbar: false,
-      appBar: CustomAppbar(title: "Gelen Kutusu"),
+      title: Text(
+        "Gelen Kutusu",
+        style: TextStyle(
+          color: context.themeValue(
+            light: AppColors.lightText,
+            dark: AppColors.darkText,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -63,7 +72,7 @@ class _InboxViewState extends State<InboxView> {
               subtitle: const Text("This is the first message."),
               trailing: Text("5m"),
               onTap: () {
-                // Handle message tap
+                AppNavigator.pushNamed("/chat");
               },
             ),
             ListTile(
@@ -79,7 +88,7 @@ class _InboxViewState extends State<InboxView> {
               subtitle: const Text("This is the second message."),
               trailing: Text("2m"),
               onTap: () {
-                // Handle message tap
+                AppNavigator.pushNamed("/chat");
               },
             ),
           ],

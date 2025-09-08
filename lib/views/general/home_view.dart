@@ -45,28 +45,33 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
-      body: ListView(
-        children: [
-          StoryList(
-            users: [
-              "BeratARPA",
-              "Emma",
-              "Alex",
-              "Lisa",
-              "Michael",
-              "Sophia",
-              "David",
-            ],
-            onAddStory: () {
-              AppNavigator.pushNamed("/create-story");
-            },
-            onStoryTap: (userId) {
-              AppNavigator.pushNamed("/story-viewer", arguments: userId);
-            },
-          ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 2));
+        },
+        child: ListView(
+          children: [
+            StoryList(
+              users: [
+                "BeratARPA",
+                "Emma",
+                "Alex",
+                "Lisa",
+                "Michael",
+                "Sophia",
+                "David",
+              ],
+              onAddStory: () {
+                AppNavigator.pushNamed("/create-story");
+              },
+              onStoryTap: (userId) {
+                AppNavigator.pushNamed("/story-viewer", arguments: userId);
+              },
+            ),
 
-          ...AppSeedData.posts.map((post) => PostCard(post: post)),
-        ],
+            ...AppSeedData.posts.map((post) => PostCard(post: post)),
+          ],
+        ),
       ),
     );
   }

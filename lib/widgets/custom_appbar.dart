@@ -6,7 +6,7 @@ import 'package:social/helpers/app_navigator.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool? showTitle;
-  final String? title;
+  final Widget? title;
   final bool? centerTitle;
   final bool? showActions;
   final List<Widget>? actions;
@@ -29,15 +29,16 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title:
           showTitle == true
-              ? Text(
-                title ?? AppConstant.brandName,
-                style: TextStyle(
-                  color: context.themeValue(
-                    light: AppColors.lightText,
-                    dark: AppColors.darkText,
-                  ),
-                ),
-              )
+              ? title ??
+                  Text(
+                    AppConstant.brandName,
+                    style: TextStyle(
+                      color: context.themeValue(
+                        light: AppColors.lightText,
+                        dark: AppColors.darkText,
+                      ),
+                    ),
+                  )
               : null,
       centerTitle: centerTitle ?? false,
       backgroundColor: context.themeValue(

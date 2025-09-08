@@ -13,6 +13,8 @@ import 'package:social/services/localization_service.dart';
 import 'package:social/services/social_api_service.dart';
 import 'package:social/services/theme_service.dart';
 import 'package:social/view_models/auth/auth_viewmodel.dart';
+import 'package:social/view_models/general/profile_viewmodel.dart';
+import 'package:social/view_models/general/vibes_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +54,8 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => AuthViewModel(context.read<SocialApiService>()),
         ),
+        ChangeNotifierProvider(create: (context) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (context) => VibesViewModel()),
       ],
 
       child: MainApp(),

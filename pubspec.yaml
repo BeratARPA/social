@@ -13,6 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  chatview: ^2.5.0
   path_provider: ^2.1.5
   video_player: ^2.10.0
   video_thumbnail: ^0.5.6

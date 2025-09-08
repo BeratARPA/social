@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/views/general/main_layout_view.dart';
-import 'package:social/widgets/custom_appbar.dart';
 
 class NotificationView extends StatefulWidget {
   const NotificationView({super.key});
@@ -15,7 +14,15 @@ class _NotificationViewState extends State<NotificationView> {
   @override
   Widget build(BuildContext context) {
     return MainLayoutView(
-      appBar: CustomAppbar(title: "Bildirimler"),
+      title: Text(
+        "Bildirimler",
+        style: TextStyle(
+          color: context.themeValue(
+            light: AppColors.lightText,
+            dark: AppColors.darkText,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

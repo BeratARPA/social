@@ -6,8 +6,8 @@ class AppSeedData {
       id: '1',
       user: UserModel(
         id: '1',
-        username: 'johndoe',
-        displayName: 'John Doe',
+        username: 'BeratARPA',
+        displayName: 'Berat ARPA',
         profilePicture: 'assets/images/app_logo.png',
         isVerified: true,
       ),
@@ -36,9 +36,9 @@ class AppSeedData {
     PostModel(
       id: "3",
       user: UserModel(
-        id: "3",
-        username: "musiclover",
-        displayName: "Music Lover",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Bu hafta en çok dinlediğiniz şarkı hangisi? 🎶",
@@ -60,9 +60,9 @@ class AppSeedData {
     PostModel(
       id: "2",
       user: UserModel(
-        id: "2",
-        username: "tech_guru",
-        displayName: "Tech Guru",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
         isVerified: true,
       ),
@@ -79,9 +79,9 @@ class AppSeedData {
     PostModel(
       id: "6",
       user: UserModel(
-        id: "6",
-        username: "fitness_freak",
-        displayName: "FitLife",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Spor yapmayı hayatınızın bir parçası haline getirin! 💪",
@@ -94,9 +94,9 @@ class AppSeedData {
     PostModel(
       id: "4",
       user: UserModel(
-        id: "4",
-        username: "traveler",
-        displayName: "World Traveler",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
         isVerified: false,
       ),
@@ -114,9 +114,9 @@ class AppSeedData {
     PostModel(
       id: "8",
       user: UserModel(
-        id: "8",
-        username: "bookworm",
-        displayName: "Book Worm",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Bu ayın kitabı: 'Clean Code' 📚",
@@ -129,9 +129,9 @@ class AppSeedData {
     PostModel(
       id: "5",
       user: UserModel(
-        id: "5",
-        username: "funny_memes",
-        displayName: "Meme Master",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Flutter geliştiricileri böyle... 😂",
@@ -148,8 +148,8 @@ class AppSeedData {
       id: '10',
       user: UserModel(
         id: '1',
-        username: 'johndoe',
-        displayName: 'John Doe',
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: 'assets/images/app_logo.png',
         isVerified: true,
       ),
@@ -165,9 +165,9 @@ class AppSeedData {
     PostModel(
       id: "7",
       user: UserModel(
-        id: "7",
-        username: "chef_master",
-        displayName: "Chef Antonio",
+        id: "1",
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
         isVerified: true,
       ),
@@ -183,9 +183,9 @@ class AppSeedData {
     PostModel(
       id: "9",
       user: UserModel(
-        id: "9",
-        username: "naturelover",
-        displayName: "Nature Lover",
+        id: "1",
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Doğanın huzuru paha biçilemez 🍃",
@@ -201,8 +201,8 @@ class AppSeedData {
       id: '11',
       user: UserModel(
         id: '1',
-        username: 'johndoe',
-        displayName: 'John Doe',
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: 'assets/images/app_logo.png',
         isVerified: true,
       ),
@@ -221,8 +221,8 @@ class AppSeedData {
       id: '12',
       user: UserModel(
         id: '1',
-        username: 'johndoe',
-        displayName: 'John Doe',
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: 'assets/images/app_logo.png',
         isVerified: true,
       ),
@@ -241,8 +241,8 @@ class AppSeedData {
       id: '13',
       user: UserModel(
         id: '1',
-        username: 'johndoe',
-        displayName: 'John Doe',
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: 'assets/images/app_logo.png',
         isVerified: true,
       ),
@@ -268,8 +268,8 @@ class AppSeedData {
       id: "14",
       user: UserModel(
         id: "1",
-        username: 'johndoe',
-        displayName: 'John Doe',
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
         isVerified: true,
       ),
@@ -285,9 +285,9 @@ class AppSeedData {
     PostModel(
       id: "15",
       user: UserModel(
-        id: "10",
-        username: "jane_smith",
-        displayName: "Jane Smith",
+        id: "1",
+        username: "BeratARPA",
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Favori kahvenizi seçin ☕️",
@@ -309,9 +309,9 @@ class AppSeedData {
     PostModel(
       id: "16",
       user: UserModel(
-        id: "11",
-        username: "flutter_dev",
-        displayName: "Flutter Dev",
+        id: "1",
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
         isVerified: true,
       ),
@@ -327,9 +327,9 @@ class AppSeedData {
     PostModel(
       id: "17",
       user: UserModel(
-        id: "10",
-        username: "jane_smith",
-        displayName: "Jane Smith",
+        id: "1",
+        username: 'BeratARPA',
+        displayName: "Berat ARPA",
         profilePicture: "assets/images/app_logo.png",
       ),
       content: "Yeni profil fotoğrafım nasıl olmuş? 😎",

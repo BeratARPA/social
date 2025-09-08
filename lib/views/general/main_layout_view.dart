@@ -4,7 +4,7 @@ import 'package:social/widgets/custom_navbar.dart';
 
 class MainLayoutView extends StatefulWidget {
   final Widget body;
-  final String? title;
+  final Widget? title;
   final CustomAppbar? appBar;
   final bool showAppBar;
   final bool showNavbar;

@@ -6,6 +6,8 @@ class CustomTextField extends StatefulWidget {
   final bool enableClearButton;
   final String? labelText;
   final String? hintText;
+  final int? minLines;
+  final int? maxLines;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final TextInputType keyboardType;
@@ -20,6 +22,8 @@ class CustomTextField extends StatefulWidget {
     this.enableClearButton = true,
     this.labelText,
     this.hintText,
+    this.minLines,
+    this.maxLines,
     this.onChanged,
     this.onSubmitted,
     this.keyboardType = TextInputType.text,
@@ -139,6 +143,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.keyboardType,
       style: widget.style,
       onChanged: widget.onChanged,
+      minLines: widget.minLines,
+      maxLength: widget.maxLines,
       onSubmitted: widget.onSubmitted,
       decoration: effectiveDecoration,
       obscureText: widget.isPassword ? _obscureText : false,

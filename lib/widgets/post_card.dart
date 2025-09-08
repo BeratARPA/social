@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/services/format_service.dart';
 import 'package:social/widgets/custom_poll.dart';
 import 'package:social/widgets/custom_profile.dart';
 import 'package:social/widgets/custom_video_player.dart';
@@ -107,15 +108,6 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
     _pageController.dispose();
     _likeAnimationController.dispose();
     super.dispose();
-  }
-
-  String _formatCount(int count) {
-    if (count >= 1000000) {
-      return '${(count / 1000000).toStringAsFixed(1)}M';
-    } else if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}B';
-    }
-    return count.toString();
   }
 
   void _handleLike() {
@@ -254,13 +246,7 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
         return CustomVideoPlayer(
           url: media.url!,
           sourceType: VideoSourceType.asset,
-          autoPlay: true,
-          showControls: true,
-          allowFullscreen: true,
-          primaryColor: AppColors.primary,
-          enableDoubleTapToSeek: true,
-          onPositionChanged: (position) => print('Position: $position'),
-          onVideoEnd: () => print('Video ended'),
+          mode: VideoPlayerMode.standard,
         );
 
       case MediaType.poll:
@@ -272,7 +258,7 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
             // Handle poll vote
             print('Poll vote: option $optionIndex');
           },
-        );      
+        );
     }
   }
 
@@ -385,7 +371,7 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
                     ),
                     children: [
                       TextSpan(
-                        text: _formatCount(widget.post.likeCount),
+                        text: FormatService.formatCount(widget.post.likeCount),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                       const TextSpan(text: ' beğeni'),
@@ -400,7 +386,7 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  '${_formatCount(widget.post.commentCount)} yorumu gör',
+                  '${FormatService.formatCount(widget.post.commentCount)} yorumu gör',
                   style: TextStyle(
                     fontSize: 13,
                     color: context.themeValue(
@@ -444,20 +430,6 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
                       ),
                       borderRadius: BorderRadius.circular(2),
                     ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.link,
-                      color: context.themeValue(
-                        light: AppColors.lightText,
-                        dark: AppColors.darkText,
-                      ),
-                    ),
-                    title: const Text('Bağlantıyı kopyala'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      // Copy link functionality
-                    },
                   ),
                   ListTile(
                     leading: Icon(

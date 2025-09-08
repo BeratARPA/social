@@ -30,6 +30,10 @@ class CustomProfile extends StatelessWidget {
   final DateTime? createdAt;
   final String? customTimeText;
 
+  // Story özelliği
+  final bool hasStory;
+  final List<Color>? storyGradientColors;
+
   // Görünüm ayarları
   final ProfileLayout layout;
   final ProfileDisplayMode displayMode;
@@ -74,6 +78,8 @@ class CustomProfile extends StatelessWidget {
     this.userId,
     this.createdAt,
     this.customTimeText,
+    this.hasStory = false,
+    this.storyGradientColors,
     this.layout = ProfileLayout.horizontal,
     this.displayMode = ProfileDisplayMode.full,
     this.avatarRadius = 18,
@@ -224,12 +230,37 @@ class CustomProfile extends StatelessWidget {
               : null,
     );
 
+    final avatarWidget =
+        hasStory
+            ? Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors:
+                      storyGradientColors ??
+                      [Colors.purple, Colors.pink, Colors.orange],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                child: avatar,
+              ),
+            )
+            : avatar;
+
     return GestureDetector(
       onTap:
           enableTap
               ? (onAvatarTap ?? onTap ?? () => onUserTap?.call(userId))
               : null,
-      child: avatar,
+      child: avatarWidget,
     );
   }
 

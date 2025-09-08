@@ -23,6 +23,8 @@ class _CustomStoryViewerState extends State<CustomStoryViewer> {
 
   Widget _buildProfileView() {
     return CustomProfile(
+      nameTextColor: Colors.white,
+      usernameTextColor: Colors.white,
       displayName: "Berat ARPA",
       username: "BeratARPA",
       profilePicture: "assets/images/app_logo.png",

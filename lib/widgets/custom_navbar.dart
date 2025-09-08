@@ -20,7 +20,7 @@ class CustomNavbar extends StatelessWidget {
         AppNavigator.pushNamed("/create-story");
         break;
       case 3:
-        AppNavigator.pushReplacementNamed("/videos");
+        AppNavigator.pushReplacementNamed("/vibes");
         break;
       case 4:
         AppNavigator.pushReplacementNamed("/profile");
@@ -32,7 +32,7 @@ class CustomNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SizedBox(
-        height: 50,
+        height: 55,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
