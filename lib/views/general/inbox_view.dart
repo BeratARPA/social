@@ -27,11 +27,11 @@ class _InboxViewState extends State<InboxView> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            CustomTextField(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CustomTextField(
               hintText: "Ara",
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -44,8 +44,10 @@ class _InboxViewState extends State<InboxView> {
                 // Handle search
               },
             ),
-            const SizedBox(height: 32.0),
-            Row(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
               children: [
                 Text(
                   "Mesajlar",
@@ -58,41 +60,31 @@ class _InboxViewState extends State<InboxView> {
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
-            ListTile(
-              leading: CustomProfile(
-                displayName: "Berat ARPA",
-                profilePicture: "assets/images/app_logo.png",
-                layout: ProfileLayout.minimal,
-                displayMode: ProfileDisplayMode.avatarOnly,
-                avatarRadius: 30,
-                padding: EdgeInsets.zero,
-              ),
-              title: const Text("Message 1"),
-              subtitle: const Text("This is the first message."),
-              trailing: Text("5m"),
-              onTap: () {
-                AppNavigator.pushNamed("/chat");
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 100,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CustomProfile(
+                    displayName: "Berat ARPA",
+                    profilePicture: "assets/images/app_logo.png",
+                    layout: ProfileLayout.minimal,
+                    displayMode: ProfileDisplayMode.avatarOnly,
+                    avatarRadius: 30,
+                    padding: EdgeInsets.zero,
+                  ),
+                  title: Text("Message ${index + 1}"),
+                  subtitle: Text("This is message number ${index + 1}."),
+                  trailing: Text("${(index + 1) * 5}m"),
+                  onTap: () {
+                    AppNavigator.pushNamed("/chat");
+                  },
+                );
               },
             ),
-            ListTile(
-              leading: CustomProfile(
-                displayName: "Berat ARPA",
-                profilePicture: "assets/images/app_logo.png",
-                layout: ProfileLayout.minimal,
-                displayMode: ProfileDisplayMode.avatarOnly,
-                avatarRadius: 30,
-                padding: EdgeInsets.zero,
-              ),
-              title: const Text("Message 2"),
-              subtitle: const Text("This is the second message."),
-              trailing: Text("2m"),
-              onTap: () {
-                AppNavigator.pushNamed("/chat");
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

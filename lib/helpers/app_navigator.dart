@@ -5,7 +5,7 @@ import 'package:social/views/auth/login_view.dart';
 import 'package:social/views/auth/register_view.dart';
 import 'package:social/views/auth/send_email_verification_view.dart';
 import 'package:social/views/auth/verify_email_view.dart';
-import 'package:social/views/general/chat_screen_view.dart';
+import 'package:social/views/general/chat_view.dart';
 import 'package:social/views/general/create_story_view.dart';
 import 'package:social/views/general/explore_view.dart';
 import 'package:social/views/general/home_view.dart';
@@ -17,7 +17,7 @@ import 'package:social/views/general/vibes_view.dart';
 
 class AppNavigator {
   static Map<String, Widget Function(BuildContext)> routes = {
-    "/chat": (context) => const ChatScreenView(),
+    "/chat": (context) => const ChatView(),
     "/vibes": (context) => const VibesView(),
     "/profile": (context) => const ProfileView(),
     "/explore": (context) => const ExploreView(),

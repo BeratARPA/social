@@ -3,11 +3,12 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_windows
   connectivity_plus
-  emoji_picker_flutter
   file_selector_windows
   firebase_core
   permission_handler_windows
+  record_windows
   url_launcher_windows
 )
 
