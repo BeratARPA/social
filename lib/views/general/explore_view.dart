@@ -5,8 +5,8 @@ import 'package:social/helpers/app_color.dart';
 import 'package:social/helpers/app_seed_data.dart';
 import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_text_field.dart';
-import 'package:social/widgets/post_card.dart';
-import 'package:social/widgets/post_preview.dart';
+import 'package:social/widgets/custom_post_card.dart';
+import 'package:social/widgets/custom_post_preview.dart';
 
 class ExploreView extends StatefulWidget {
   const ExploreView({super.key});

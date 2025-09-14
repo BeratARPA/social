@@ -21,7 +21,6 @@ class CustomVoiceRecorderPlayer extends StatefulWidget {
   final String? placeholder;
   final bool autoSend;
   final Function(File file)? onSendRecording;
-  // Yeni parametre: kayıt durdurma komutu
   final bool shouldStopRecording;
   final VoidCallback? onRecordingStopped;
 
@@ -238,7 +237,7 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
         padding: EdgeInsets.zero,
       );
     } else {
-      return Container(
+      return SizedBox(
         height: widget.height ?? 20,
         child: Center(
           child: Text(
@@ -260,7 +259,7 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
         color:
             widget.backgroundColor ??
             context.themeValue(
@@ -291,7 +290,6 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
                           dark: AppColors.darkSecondaryText.withOpacity(0.3),
                         ),
                         liveWaveColor: widget.waveColor ?? AppColors.primary,
-                        spacing: 6,
                       ),
                     )
                     : Center(

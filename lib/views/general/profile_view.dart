@@ -7,8 +7,8 @@ import 'package:social/view_models/general/profile_viewmodel.dart';
 import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_elevated_button.dart';
 import 'package:social/widgets/custom_profile.dart';
-import 'package:social/widgets/post_card.dart';
-import 'package:social/widgets/post_preview.dart';
+import 'package:social/widgets/custom_post_card.dart';
+import 'package:social/widgets/custom_post_preview.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

@@ -76,7 +76,6 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       supportedLocales: l10n.all,
       locale: localizationService.locale,
       localizationsDelegates: [

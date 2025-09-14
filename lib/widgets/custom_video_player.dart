@@ -9,7 +9,6 @@ enum VideoPlayerMode {
   standard, // Normal video player with controls
   reels, // TikTok/Reels style with overlay actions
   feed, // Feed içinde küçük preview
-  fullscreen, // Tam ekran
 }
 
 class CustomVideoPlayer extends StatefulWidget {
@@ -41,7 +40,6 @@ class CustomVideoPlayer extends StatefulWidget {
 
   // Standard mode specific
   final bool showControls;
-  final bool allowFullscreen;
   final bool enableDoubleTapToSeek;
   final int doubleTapSeekSeconds;
 
@@ -76,7 +74,6 @@ class CustomVideoPlayer extends StatefulWidget {
     this.reelsTopInfo,
     // Standard specific
     this.showControls = true,
-    this.allowFullscreen = true,
     this.enableDoubleTapToSeek = true,
     this.doubleTapSeekSeconds = 10,
     // Visibility
@@ -304,9 +301,6 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
       case VideoPlayerMode.feed:
         togglePlayPause();
         break;
-      case VideoPlayerMode.fullscreen:
-        _toggleControls();
-        break;
     }
   }
 
@@ -481,8 +475,6 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
         return _buildStandardOverlays();
       case VideoPlayerMode.feed:
         return _buildFeedOverlays();
-      case VideoPlayerMode.fullscreen:
-        return _buildFullscreenOverlays();
     }
   }
 
@@ -556,10 +548,6 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
     ];
   }
 
-  List<Widget> _buildFullscreenOverlays() {
-    return _buildStandardOverlays(); // Same as standard for now
-  }
-
   List<Widget> _buildCommonOverlays() {
     return [
       // Seek indicator
@@ -590,15 +578,6 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                if (widget.allowFullscreen)
-                  IconButton(
-                    onPressed: () => _openFullscreen(),
-                    icon: const Icon(
-                      Icons.fullscreen,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
                 const Spacer(),
                 IconButton(
                   onPressed: toggleMute,
@@ -838,7 +817,6 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
         return 9 / 16;
       case VideoPlayerMode.standard:
       case VideoPlayerMode.feed:
-      case VideoPlayerMode.fullscreen:
         return _controller?.value.aspectRatio ?? 16 / 9;
     }
   }
@@ -852,61 +830,5 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
       return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
     }
     return "$twoDigitMinutes:$twoDigitSeconds";
-  }
-
-  void _openFullscreen() {
-    if (_controller == null || !_isInitialized) return;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) => _FullscreenVideoPlayer(
-              controller: _controller!,
-              primaryColor: widget.primaryColor,
-              onClose: () => Navigator.pop(context),
-            ),
-      ),
-    );
-  }
-}
-
-// Fullscreen Video Player Widget
-class _FullscreenVideoPlayer extends StatelessWidget {
-  final VideoPlayerController controller;
-  final Color primaryColor;
-  final VoidCallback onClose;
-
-  const _FullscreenVideoPlayer({
-    required this.controller,
-    required this.primaryColor,
-    required this.onClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: VideoPlayer(controller),
-              ),
-            ),
-            Positioned(
-              top: 16,
-              left: 16,
-              child: IconButton(
-                onPressed: onClose,
-                icon: const Icon(Icons.close, color: Colors.white, size: 28),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

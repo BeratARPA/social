@@ -1,4 +1,4 @@
-import 'package:social/widgets/post_card.dart';
+import 'package:social/widgets/custom_post_card.dart';
 
 class AppSeedData {
   static List<PostModel> posts = [

@@ -7,7 +7,7 @@ import 'package:social/helpers/app_color.dart';
 import 'package:social/widgets/custom_profile.dart';
 import 'package:social/widgets/custom_video_player.dart';
 import 'package:social/services/format_service.dart';
-import 'package:social/widgets/post_card.dart';
+import 'package:social/widgets/custom_post_card.dart';
 
 class VibesView extends StatefulWidget {
   const VibesView({super.key});

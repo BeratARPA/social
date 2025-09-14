@@ -1,6 +1,6 @@
 import 'package:social/helpers/app_seed_data.dart';
 import 'package:social/view_models/general/base_viewmodel.dart';
-import 'package:social/widgets/post_card.dart';
+import 'package:social/widgets/custom_post_card.dart';
 
 class ProfileViewModel extends BaseViewModel {
   // Current user
