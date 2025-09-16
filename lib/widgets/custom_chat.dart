@@ -1,12 +1,17 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:giphy_get/giphy_get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/widgets/custom_poll.dart';
 import 'package:social/widgets/custom_video_player.dart';
 import 'package:social/widgets/custom_voice_recorder_player.dart';
 
-enum MessageType { text, image, video, voice, poll, gif }
+enum MessageType { text, image, video, voice, poll, gif, document }
 
 class ChatMessage {
   final String id;
@@ -55,13 +60,19 @@ class CustomChat extends StatefulWidget {
 class _CustomChatState extends State<CustomChat> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
+
+  final ImagePicker _imagePicker = ImagePicker();
   List<ChatMessage> _messages = [];
+  ChatMessage? _replyingTo;
+  bool _isRecording = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.initialMessages != null) {
       _messages = List.from(widget.initialMessages!);
+      _scrollToBottom();
     }
   }
 
@@ -85,7 +96,7 @@ class _CustomChatState extends State<CustomChat> {
             },
           ),
         ),
-
+        if (_replyingTo != null) _buildReplyPreview(),
         _buildMessageInput(),
       ],
     );
@@ -104,61 +115,313 @@ class _CustomChatState extends State<CustomChat> {
           topRight: Radius.circular(16),
         ),
       ),
+      child:
+          _isRecording
+              ? Expanded(
+                child: CustomVoiceRecorderPlayer(
+                  mode: VoiceWidgetMode.recorder,
+                  onSendRecording: (file) {
+                    _sendMediaMessage(file.path, MessageType.voice);
+                    setState(() {
+                      _isRecording = false;
+                    });
+                  },
+                  onRecordingDeleted: () {
+                    setState(() {
+                      _isRecording = false;
+                    });
+                  },
+                ),
+              )
+              : Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      color: context.themeValue(
+                        light: AppColors.lightText,
+                        dark: AppColors.darkText,
+                      ),
+                    ),
+                    onPressed: () => _showAttachmentOptions(),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      focusNode: _focusNode,
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        hintText: 'Mesaj...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      minLines: 1,
+                      maxLines: 5,
+                      onChanged: (value) => setState(() {}),
+                    ),
+                  ),
+                  if (_messageController.text.trim().isEmpty) ...[
+                    IconButton(
+                      icon: Icon(
+                        Icons.mic,
+                        color: context.themeValue(
+                          light: AppColors.lightText,
+                          dark: AppColors.darkText,
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isRecording = true;
+                        });
+                      },
+                    ),
+                  ] else
+                    IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: context.themeValue(
+                          light: AppColors.lightText,
+                          dark: AppColors.darkText,
+                        ),
+                      ),
+                      onPressed: () => _sendTextMessage(),
+                    ),
+                ],
+              ),
+    );
+  }
+
+  Widget _buildReplyPreview() {
+    if (_replyingTo == null) return SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: context.themeValue(
+          light: AppColors.lightDisabled.withValues(alpha: 0.3),
+          dark: AppColors.darkDisabled.withValues(alpha: 0.3),
+        ),
+        borderRadius: BorderRadius.circular(8),
+        border: Border(left: BorderSide(color: AppColors.primary, width: 4)),
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.add_circle_outline,
-              color: context.themeValue(
-                light: AppColors.lightText,
-                dark: AppColors.darkText,
-              ),
-            ),
-            onPressed: () => _showAttachmentOptions(),
-          ),
           Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'Mesaj...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _replyingTo!.senderName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: context.themeValue(
+                      light: AppColors.lightText,
+                      dark: AppColors.darkText,
+                    ),
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                const SizedBox(height: 4),
+                Text(
+                  _getReplyPreviewText(_replyingTo!),
+                  style: TextStyle(
+                    color: context.themeValue(
+                      light: AppColors.lightText,
+                      dark: AppColors.darkText,
+                    ),
+                  ),
                 ),
-              ),
-              minLines: 1,
-              maxLines: 5,
+              ],
             ),
           ),
-          if (_messageController.text.trim().isEmpty) ...[
-            IconButton(
-              icon: Icon(
-                Icons.mic,
-                color: context.themeValue(
-                  light: AppColors.lightText,
-                  dark: AppColors.darkText,
-                ),
-              ),
-              onPressed: () {},
-            ),
-          ] else
-            IconButton(
-              icon: Icon(
-                Icons.send,
-                color: context.themeValue(
-                  light: AppColors.lightText,
-                  dark: AppColors.darkText,
-                ),
-              ),
-              onPressed: () {},
-            ),
+          IconButton(
+            icon: Icon(Icons.close, size: 20),
+            onPressed: () {
+              setState(() {
+                _replyingTo = null;
+              });
+            },
+          ),
         ],
       ),
+    );
+  }
+
+  void _sendTextMessage() {
+    if (_messageController.text.trim().isEmpty) return;
+
+    final message = ChatMessage(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      content: _messageController.text.trim(),
+      type: MessageType.text,
+      senderId: widget.currentUserId,
+      senderName: 'Ben',
+      timestamp: DateTime.now(),
+      replyTo: _replyingTo,
+    );
+
+    setState(() {
+      _messages.add(message);
+      _messageController.clear();
+      _replyingTo = null;
+      _scrollToBottom();
+    });
+  }
+
+  void _sendMediaMessage(String url, MessageType type) {
+    final message = ChatMessage(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      content: url,
+      type: type,
+      senderId: widget.currentUserId,
+      senderName: 'Ben',
+      timestamp: DateTime.now(),
+      replyTo: _replyingTo,
+    );
+
+    setState(() {
+      _messages.add(message);
+      _messageController.clear();
+      _replyingTo = null;
+      _scrollToBottom();
+    });
+  }
+
+  void _sendPollMessage(Map<String, dynamic> pollData) {
+    final message = ChatMessage(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      content: pollData['question'],
+      type: MessageType.poll,
+      senderId: widget.currentUserId,
+      senderName: 'Ben',
+      timestamp: DateTime.now(),
+      replyTo: _replyingTo,
+      pollData: pollData,
+    );
+
+    setState(() {
+      _messages.add(message);
+      _messageController.clear();
+      _replyingTo = null;
+      _scrollToBottom();
+    });
+  }
+
+  void _createPoll() {
+    final TextEditingController questionController = TextEditingController();
+    final List<TextEditingController> optionControllers = [
+      TextEditingController(),
+      TextEditingController(),
+    ];
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder:
+          (context) => StatefulBuilder(
+            builder:
+                (context, setDialogState) => AlertDialog(
+                  title: Text("Anket Oluştur"),
+                  content: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: questionController,
+                          decoration: InputDecoration(
+                            labelText: 'Anket Sorusu',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text("Seçenekler"),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: optionControllers.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                ),
+                                child: TextField(
+                                  controller: optionControllers[index],
+                                  decoration: InputDecoration(
+                                    labelText: 'Seçenek ${index + 1}',
+                                    suffixIcon:
+                                        index >= 2
+                                            ? IconButton(
+                                              icon: Icon(
+                                                Icons.remove_circle_outline,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                setDialogState(() {
+                                                  optionControllers.removeAt(
+                                                    index,
+                                                  );
+                                                });
+                                              },
+                                            )
+                                            : null,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        if (optionControllers.length < 5)
+                          TextButton.icon(
+                            icon: Icon(Icons.add),
+                            label: Text('Seçenek Ekle'),
+                            onPressed: () {
+                              setDialogState(() {
+                                optionControllers.add(TextEditingController());
+                              });
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Kapat"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (questionController.text.trim().isEmpty ||
+                            optionControllers.any(
+                              (controller) => controller.text.trim().isEmpty,
+                            ) ||
+                            optionControllers.length < 2) {
+                          return;
+                        }
+                        Navigator.pop(context);
+                        _sendPollMessage({
+                          'question': questionController.text.trim(),
+                          'options':
+                              optionControllers
+                                  .map((controller) => controller.text.trim())
+                                  .toList(),
+                          'votes': List.filled(optionControllers.length, 0),
+                        });
+                      },
+                      child: Text("Oluştur"),
+                    ),
+                  ],
+                ),
+          ),
     );
   }
 
@@ -172,28 +435,117 @@ class _CustomChatState extends State<CustomChat> {
             crossAxisCount: 3,
             children: [
               _buildAttachmentOption(Icons.camera_alt, 'Kamera', () {
-                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
               }),
               _buildAttachmentOption(Icons.photo, 'Galeri', () {
-                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
               }),
               _buildAttachmentOption(Icons.video_camera_back, 'Video', () {
-                Navigator.pop(context);
+                _pickVideo(ImageSource.gallery);
               }),
               _buildAttachmentOption(Icons.poll, 'Anket', () {
-                Navigator.pop(context);
+                _createPoll();
               }),
               _buildAttachmentOption(Icons.gif, 'Çıkartmalar', () {
-                Navigator.pop(context);
+                _pickGif();
               }),
-              _buildAttachmentOption(Icons.location_on, 'Konum', () {
-                Navigator.pop(context);
+              _buildAttachmentOption(Icons.insert_drive_file, 'Belge', () {
+                _pickDocument();
               }),
             ],
           ),
         );
       },
     );
+  }
+
+  void _pickDocument() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'],
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      Navigator.pop(context);
+
+      final file = result.files.first;
+      _sendMediaMessage(file.path!, MessageType.document);
+    }
+  }
+
+  void _pickGif() async {
+    final gif = await GiphyGet.getGif(
+      context: context,
+      apiKey: 'A3GLzkuYUMXePccALGyKe4eMra2i6NNL',
+      lang: GiphyLanguage.turkish,
+    );
+
+    if (gif != null) {
+      Navigator.pop(context);
+
+      _sendMediaMessage(gif.images?.original?.url ?? '', MessageType.gif);
+    }
+  }
+
+  void _pickImage(ImageSource source) async {
+    final XFile? image = await _imagePicker.pickImage(
+      source: source,
+      imageQuality: 80,
+      maxWidth: 1200,
+      maxHeight: 1200,
+    );
+
+    if (image != null) {
+      final file = File(image.path);
+      if (!await file.exists()) {
+        return;
+      }
+
+      final fileSize = await file.length();
+      if (fileSize > 10 * 1024 * 1024) {
+        return;
+      }
+
+      Navigator.pop(context);
+
+      _sendMediaMessage(file.path, MessageType.image);
+    }
+  }
+
+  void _pickVideo(ImageSource source) async {
+    final XFile? video = await _imagePicker.pickVideo(
+      source: source,
+      maxDuration: const Duration(minutes: 5),
+    );
+
+    if (video != null) {
+      final file = File(video.path);
+      if (!await file.exists()) {
+        return;
+      }
+
+      final fileSize = await file.length();
+      if (fileSize > 50 * 1024 * 1024) {
+        return;
+      }
+
+      Navigator.pop(context);
+
+      _sendMediaMessage(file.path, MessageType.video);
+    }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent + 300,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   Widget _buildAttachmentOption(
@@ -249,6 +601,24 @@ class _CustomChatState extends State<CustomChat> {
                       : AssetImage("assets/images/app_logo.png"),
             ),
           GestureDetector(
+            onDoubleTap: () {
+              HapticFeedback.selectionClick();
+              setState(() {
+                if (message.reactions.containsKey('❤️')) {
+                  if (message.reactions['❤️']!.contains(widget.currentUserId)) {
+                    message.reactions['❤️']!.remove(widget.currentUserId);
+                    if (message.reactions['❤️']!.isEmpty) {
+                      message.reactions.remove('❤️');
+                    }
+                  } else {
+                    message.reactions.putIfAbsent('❤️', () => []);
+                    message.reactions['❤️']!.add(widget.currentUserId);
+                  }
+                } else {
+                  message.reactions['❤️'] = [widget.currentUserId];
+                }
+              });
+            },
             onLongPressStart:
                 (details) =>
                     _showMessageOptions(message, details.globalPosition, isMe),
@@ -272,6 +642,8 @@ class _CustomChatState extends State<CustomChat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (message.replyTo != null)
+                    _buildMessageReplyContent(message.replyTo),
                   _buildMessageContent(message),
                   if (message.reactions.isNotEmpty)
                     _buildReactions(message, maxWidth),
@@ -283,6 +655,67 @@ class _CustomChatState extends State<CustomChat> {
         ],
       ),
     );
+  }
+
+  Widget _buildMessageReplyContent(ChatMessage? replyTo) {
+    if (replyTo == null) return SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: context.themeValue(
+          light: AppColors.lightDisabled.withValues(alpha: 0.1),
+          dark: AppColors.darkDisabled.withValues(alpha: 0.1),
+        ),
+        borderRadius: BorderRadius.circular(8),
+        border: Border(left: BorderSide(color: AppColors.primary, width: 4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            replyTo.senderName,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: context.themeValue(
+                light: AppColors.lightText,
+                dark: AppColors.darkText,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _getReplyPreviewText(replyTo),
+            style: TextStyle(
+              color: context.themeValue(
+                light: AppColors.lightText,
+                dark: AppColors.darkText,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getReplyPreviewText(ChatMessage message) {
+    switch (message.type) {
+      case MessageType.text:
+        return message.content;
+      case MessageType.image:
+        return '📷 Fotoğraf';
+      case MessageType.video:
+        return '🎥 Video';
+      case MessageType.voice:
+        return '🎤 Ses mesajı';
+      case MessageType.poll:
+        return '📊 ${message.pollData?['question'] ?? 'Anket'}';
+      case MessageType.gif:
+        return '🎞️ GIF';
+      case MessageType.document:
+        return '📄 ${message.content.split('/').last}';
+    }
   }
 
   Widget _buildMessageInfo(ChatMessage message, bool isMe) {
@@ -326,26 +759,48 @@ class _CustomChatState extends State<CustomChat> {
 
     message.reactions.forEach((reaction, users) {
       reactionWidgets.add(
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: context.themeValue(
-              light: AppColors.lightSurface,
-              dark: AppColors.darkSurface,
-            ),
-            border: Border.all(color: AppColors.primary),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(reaction, style: const TextStyle(fontSize: 14)),
-              const SizedBox(width: 4),
-              Text(
-                users.length.toString(),
-                style: const TextStyle(fontSize: 12),
+        GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            setState(() {
+              if (message.reactions.containsKey(reaction)) {
+                if (message.reactions[reaction]!.contains(
+                  widget.currentUserId,
+                )) {
+                  message.reactions[reaction]!.remove(widget.currentUserId);
+                  if (message.reactions[reaction]!.isEmpty) {
+                    message.reactions.remove(reaction);
+                  }
+                } else {
+                  message.reactions.putIfAbsent(reaction, () => []);
+                  message.reactions[reaction]!.add(widget.currentUserId);
+                }
+              } else {
+                message.reactions[reaction] = [widget.currentUserId];
+              }
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: context.themeValue(
+                light: AppColors.lightSurface,
+                dark: AppColors.darkSurface,
               ),
-            ],
+              border: Border.all(color: AppColors.primary),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(reaction, style: const TextStyle(fontSize: 14)),
+                const SizedBox(width: 4),
+                Text(
+                  users.length.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -372,14 +827,17 @@ class _CustomChatState extends State<CustomChat> {
         Rect.fromPoints(position, position),
         Offset.zero & overlay.size,
       ),
-      surfaceTintColor: AppColors.accent,
-      shape: ShapeBorder.lerp(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(80)),
-        1,
-      ),
-      elevation: 4,
       items: [
+        PopupMenuItem(
+          value: 'react',
+          child: Row(
+            children: [
+              Icon(Icons.emoji_emotions, size: 20),
+              SizedBox(width: 12),
+              Text('Tepki Ver'),
+            ],
+          ),
+        ),
         PopupMenuItem(
           value: 'reply',
           child: Row(
@@ -400,16 +858,17 @@ class _CustomChatState extends State<CustomChat> {
             ],
           ),
         ),
-        PopupMenuItem(
-          value: 'copy',
-          child: Row(
-            children: [
-              Icon(Icons.copy, size: 20),
-              SizedBox(width: 12),
-              Text('Kopyala'),
-            ],
+        if (message.type == MessageType.text)
+          PopupMenuItem(
+            value: 'copy',
+            child: Row(
+              children: [
+                Icon(Icons.copy, size: 20),
+                SizedBox(width: 12),
+                Text('Kopyala'),
+              ],
+            ),
           ),
-        ),
         if (isMe) // Sadece kendi mesajlarımızda sil seçeneği
           PopupMenuItem(
             value: 'delete',
@@ -422,7 +881,80 @@ class _CustomChatState extends State<CustomChat> {
             ),
           ),
       ],
-    );
+    ).then((value) {
+      if (value != null) {
+        switch (value) {
+          case 'react':
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Tepki Seç'),
+                  content: Wrap(
+                    spacing: 10,
+                    children:
+                        ['❤️', '😂', '😮', '😢', '👍', '👎'].map((emoji) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              HapticFeedback.selectionClick();
+                              setState(() {
+                                if (message.reactions.containsKey(emoji)) {
+                                  if (message.reactions[emoji]!.contains(
+                                    widget.currentUserId,
+                                  )) {
+                                    message.reactions[emoji]!.remove(
+                                      widget.currentUserId,
+                                    );
+                                    if (message.reactions[emoji]!.isEmpty) {
+                                      message.reactions.remove(emoji);
+                                    }
+                                  } else {
+                                    message.reactions.putIfAbsent(
+                                      emoji,
+                                      () => [],
+                                    );
+                                    message.reactions[emoji]!.add(
+                                      widget.currentUserId,
+                                    );
+                                  }
+                                } else {
+                                  message.reactions[emoji] = [
+                                    widget.currentUserId,
+                                  ];
+                                }
+                              });
+                            },
+                            child: Text(emoji, style: TextStyle(fontSize: 30)),
+                          );
+                        }).toList(),
+                  ),
+                );
+              },
+            );
+            break;
+          case 'copy':
+            Clipboard.setData(ClipboardData(text: message.content));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Mesaj kopyalandı')));
+            break;
+          case 'reply':
+            setState(() {
+              _replyingTo = message;
+              _focusNode.requestFocus();
+            });
+            break;
+          case 'forward':
+            break;
+          case 'delete':
+            setState(() {
+              _messages.removeWhere((m) => m.id == message.id);
+            });
+            break;
+        }
+      }
+    });
   }
 
   Widget _buildMessageContent(ChatMessage message) {
@@ -439,6 +971,8 @@ class _CustomChatState extends State<CustomChat> {
         return _buildMessagePollContent(message);
       case MessageType.gif:
         return _buildMessageGifContent(message);
+      case MessageType.document:
+        return _buildMessageDocumentContent(message);
     }
   }
 
@@ -459,7 +993,54 @@ class _CustomChatState extends State<CustomChat> {
   Widget _buildMessageImageContent(ChatMessage message) {
     return ClipRRect(
       borderRadius: BorderRadiusGeometry.all(Radius.circular(8)),
-      child: SizedBox(width: 300, child: Image.network(message.content)),
+      child: SizedBox(
+        width: 300,
+        child:
+            message.content.contains("http")
+                ? Image.network(
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.grey,
+                      height: 200,
+                      width: 300,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value:
+                              loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey,
+                      height: 200,
+                      width: 300,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.broken_image,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Resim yüklenemedi',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  message.content,
+                )
+                : Image.file(File(message.content)),
+      ),
     );
   }
 
@@ -500,13 +1081,43 @@ class _CustomChatState extends State<CustomChat> {
         child: CustomVideoPlayer(
           url: message.content,
           autoPlay: false,
-          sourceType: VideoSourceType.asset,
+          sourceType:
+              message.content.contains("http")
+                  ? VideoSourceType.network
+                  : VideoSourceType.asset,
         ),
       ),
     );
   }
 
   Widget _buildMessageGifContent(ChatMessage message) {
-    return Image.network(message.content);
+    return ClipRRect(
+      borderRadius: BorderRadiusGeometry.all(Radius.circular(8)),
+      child: SizedBox(width: 300, child: Image.network(message.content)),
+    );
+  }
+
+  Widget _buildMessageDocumentContent(ChatMessage message) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.insert_drive_file, size: 40, color: AppColors.primary),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            message.content.split('/').last,
+            style: TextStyle(
+              color: context.themeValue(
+                light: AppColors.lightText,
+                dark: AppColors.darkText,
+              ),
+              decoration: TextDecoration.underline,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 5,
+          ),
+        ),
+      ],
+    );
   }
 }

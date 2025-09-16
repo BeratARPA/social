@@ -15,13 +15,7 @@ class CustomVoiceRecorderPlayer extends StatefulWidget {
   final Function()? onPlayStart;
   final Function()? onPlayPause;
   final Function()? onPlayComplete;
-  final Color? waveColor;
-  final Color? backgroundColor;
-  final double? height;
-  final String? placeholder;
-  final bool autoSend;
   final Function(File file)? onSendRecording;
-  final bool shouldStopRecording;
   final VoidCallback? onRecordingStopped;
 
   const CustomVoiceRecorderPlayer({
@@ -33,13 +27,7 @@ class CustomVoiceRecorderPlayer extends StatefulWidget {
     this.onPlayStart,
     this.onPlayPause,
     this.onPlayComplete,
-    this.waveColor,
-    this.backgroundColor,
-    this.height = 50,
-    this.placeholder,
-    this.autoSend = false,
     this.onSendRecording,
-    this.shouldStopRecording = false,
     this.onRecordingStopped,
   });
 
@@ -58,23 +46,11 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
   bool isPlaying = false;
   bool isPaused = false;
   late Directory appDirectory;
-  bool _previousShouldStop = false;
 
   @override
   void initState() {
     super.initState();
     _initializeControllers();
-  }
-
-  @override
-  void didUpdateWidget(CustomVoiceRecorderPlayer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // shouldStopRecording parametresi değiştiğinde kayıt durdur
-    if (widget.shouldStopRecording && !_previousShouldStop && isRecording) {
-      _stopRecording();
-    }
-    _previousShouldStop = widget.shouldStopRecording;
   }
 
   Future<void> _initializeControllers() async {
@@ -214,45 +190,97 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
   }
 
   Widget _buildRecorderWidget() {
-    if (isRecording) {
-      return AudioWaveforms(
-        enableGesture: false,
-        size: Size(
-          MediaQuery.of(context).size.width - 100,
-          widget.height ?? 20,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: context.themeValue(
+          light: AppColors.lightSurface,
+          dark: AppColors.darkSurface,
         ),
-        recorderController: recorderController,
-        waveStyle: WaveStyle(
-          waveColor: widget.waveColor ?? Colors.red,
-          extendWaveform: true,
-          showMiddleLine: false,
-          spacing: 6.0,
-          backgroundColor: widget.backgroundColor ?? Colors.transparent,
-        ),
-        decoration: BoxDecoration(
-          color: widget.backgroundColor ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.zero,
-      );
-    } else {
-      return SizedBox(
-        height: widget.height ?? 20,
-        child: Center(
-          child: Text(
-            widget.placeholder ?? 'Kayıt hazırlanıyor...',
-            style: TextStyle(
-              color: context.themeValue(
-                light: AppColors.lightSecondaryText,
-                dark: AppColors.darkSecondaryText,
+      ),
+      child:
+          isRecordingCompleted
+              ? Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isRecordingCompleted = false;
+                        recordedFilePath = null;
+                      });
+                      widget.onRecordingDeleted?.call();
+                    },
+                    icon: Icon(Icons.delete),
+                  ),
+                  IconButton(
+                    onPressed: _playOrPauseAudio,
+                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                  ),
+                  Expanded(
+                    child: AudioFileWaveforms(
+                      playerController: playerController,
+                      size: Size(200, 32),
+                      enableSeekGesture: true,
+                      waveformType: WaveformType.long,
+                      playerWaveStyle: PlayerWaveStyle(
+                        fixedWaveColor: context.themeValue(
+                          light: AppColors.lightSecondaryText.withValues(
+                            alpha: 0.3,
+                          ),
+                          dark: AppColors.darkSecondaryText.withValues(
+                            alpha: 0.3,
+                          ),
+                        ),
+                        liveWaveColor: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  if (recordedFilePath != null)
+                    IconButton(
+                      onPressed: () {
+                        final file = File(recordedFilePath!);
+                        if (file.existsSync()) {
+                          widget.onSendRecording?.call(file);
+                          setState(() {
+                            isRecordingCompleted = false;
+                            recordedFilePath = null;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.send,
+                        color: context.themeValue(
+                          light: AppColors.lightText,
+                          dark: AppColors.darkText,
+                        ),
+                      ),
+                    ),
+                ],
+              )
+              : Row(
+                children: [
+                  IconButton(
+                    onPressed: _stopRecording,
+                    icon: Icon(Icons.stop, color: Colors.red),
+                  ),
+                  Expanded(
+                    child: AudioWaveforms(
+                      recorderController: recorderController,
+                      size: Size(200, 32),
+                      waveStyle: WaveStyle(
+                        waveColor: AppColors.primary,
+                        extendWaveform: true,
+                        showMiddleLine: false,
+                        spacing: 6,
+                        waveThickness: 2,
+                        middleLineThickness: 0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              fontSize: 12,
-            ),
-          ),
-        ),
-      );
-    }
+    );
   }
 
   Widget _buildPlayerWidget() {
@@ -260,21 +288,16 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color:
-            widget.backgroundColor ??
-            context.themeValue(
-              light: AppColors.lightSurface,
-              dark: AppColors.darkSurface,
-            ),
+        color: context.themeValue(
+          light: AppColors.lightSurface,
+          dark: AppColors.darkSurface,
+        ),
       ),
       child: Row(
         children: [
           IconButton(
             onPressed: _playOrPauseAudio,
             icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-            iconSize: 20,
-            color: widget.waveColor ?? AppColors.primary,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           ),
           Expanded(
             child:
@@ -286,10 +309,14 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
                       waveformType: WaveformType.long,
                       playerWaveStyle: PlayerWaveStyle(
                         fixedWaveColor: context.themeValue(
-                          light: AppColors.lightSecondaryText.withOpacity(0.3),
-                          dark: AppColors.darkSecondaryText.withOpacity(0.3),
+                          light: AppColors.lightSecondaryText.withValues(
+                            alpha: 0.3,
+                          ),
+                          dark: AppColors.darkSecondaryText.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
-                        liveWaveColor: widget.waveColor ?? AppColors.primary,
+                        liveWaveColor: AppColors.primary,
                       ),
                     )
                     : Center(
@@ -313,8 +340,24 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
   void _playOrPauseAudio() async {
     try {
       if (isPlaying) {
+        if (mounted) {
+          setState(() {
+            isPlaying = false;
+            isPaused = true;
+          });
+        }
         await playerController.pausePlayer();
       } else {
+        // Eğer oynatma tamamlandıysa başa sar
+        if (!isPlaying && !isPaused) {
+          await playerController.seekTo(0);
+        }
+        if (mounted) {
+          setState(() {
+            isPlaying = true;
+            isPaused = false;
+          });
+        }
         await playerController.startPlayer();
       }
     } catch (e) {

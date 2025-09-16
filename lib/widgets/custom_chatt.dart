@@ -53,7 +53,6 @@ class _CustomChattState extends State<CustomChatt> {
   String? _recordedFilePath;
   Timer? _recordingTimer;
   Duration _recordingDuration = Duration.zero;
-  bool _shouldStopRecording = false; // Yeni state
 
   // Media handling
   final ImagePicker _imagePicker = ImagePicker();
@@ -218,12 +217,6 @@ class _CustomChattState extends State<CustomChatt> {
       child: CustomVoiceRecorderPlayer(
         mode: VoiceWidgetMode.player,
         audioPath: message.content,
-        height: 50,
-        waveColor: AppColors.primary,
-        backgroundColor: context.themeValue(
-          light: AppColors.lightSurface,
-          dark: AppColors.darkSurface,
-        ),
         onPlayStart: widget.onPlayStart,
         onPlayPause: widget.onPlayPause,
         onPlayComplete: widget.onPlayComplete,
@@ -501,26 +494,15 @@ class _CustomChattState extends State<CustomChatt> {
                             height: 20,
                             child: CustomVoiceRecorderPlayer(
                               mode: VoiceWidgetMode.recorder,
-                              height: 20,
-                              waveColor: Colors.red,
-                              backgroundColor: Colors.transparent,
-                              shouldStopRecording: _shouldStopRecording,
                               onRecordingComplete: (audioPath) {
                                 debugPrint('Ses kaydı tamamlandı: $audioPath');
                                 setState(() {
                                   _recordedFilePath = audioPath;
                                   _isRecordingCompleted = true;
                                   _isRecording = false;
-                                  _shouldStopRecording = false;
                                 });
                                 _recordingTimer?.cancel();
                               },
-                              onRecordingStopped: () {
-                                setState(() {
-                                  _shouldStopRecording = false;
-                                });
-                              },
-                              autoSend: false,
                             ),
                           ),
                         ),
@@ -539,9 +521,6 @@ class _CustomChattState extends State<CustomChatt> {
                     CustomVoiceRecorderPlayer(
                       mode: VoiceWidgetMode.player,
                       audioPath: _recordedFilePath!,
-                      height: 42,
-                      waveColor: AppColors.primary,
-                      backgroundColor: Colors.transparent,
                       onPlayStart: () {
                         debugPrint('Kayıt oynatılmaya başlandı');
                       },
@@ -922,7 +901,6 @@ class _CustomChattState extends State<CustomChatt> {
         _isRecordingCompleted = false;
         _recordedFilePath = null;
         _recordingDuration = Duration.zero;
-        _shouldStopRecording = false;
       });
 
       // Timer başlat
@@ -945,11 +923,6 @@ class _CustomChattState extends State<CustomChatt> {
   void _stopRecording() async {
     try {
       _recordingTimer?.cancel();
-
-      // Widget'a durma komutu gönder
-      setState(() {
-        _shouldStopRecording = true;
-      });
 
       debugPrint('Ses kaydı durdurma komutu gönderildi');
     } catch (e) {
@@ -985,7 +958,6 @@ class _CustomChattState extends State<CustomChatt> {
       _isRecordingCompleted = false;
       _recordedFilePath = null;
       _recordingDuration = Duration.zero;
-      _shouldStopRecording = false;
     });
     _recordingTimer?.cancel();
   }
@@ -1391,7 +1363,7 @@ class _CustomChattState extends State<CustomChatt> {
                           onTap: () {
                             Navigator.pop(context);
                             _pickImage(ImageSource.camera);
-                          },  
+                          },
                         ),
                         _buildAttachmentOption(
                           icon: Icons.photo_library,
