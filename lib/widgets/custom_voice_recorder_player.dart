@@ -211,11 +211,17 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
                       });
                       widget.onRecordingDeleted?.call();
                     },
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete, color: Colors.red),
                   ),
                   IconButton(
                     onPressed: _playOrPauseAudio,
-                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                    icon: Icon(
+                      isPlaying ? Icons.pause : Icons.play_arrow,
+                      color: context.themeValue(
+                        light: AppColors.lightText,
+                        dark: AppColors.darkText,
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: AudioFileWaveforms(
@@ -248,22 +254,12 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
                           });
                         }
                       },
-                      icon: Icon(
-                        Icons.send,
-                        color: context.themeValue(
-                          light: AppColors.lightText,
-                          dark: AppColors.darkText,
-                        ),
-                      ),
+                      icon: Icon(Icons.send, color: AppColors.primary),
                     ),
                 ],
               )
               : Row(
                 children: [
-                  IconButton(
-                    onPressed: _stopRecording,
-                    icon: Icon(Icons.stop, color: Colors.red),
-                  ),
                   Expanded(
                     child: AudioWaveforms(
                       recorderController: recorderController,
@@ -277,6 +273,10 @@ class _CustomVoiceRecorderPlayerState extends State<CustomVoiceRecorderPlayer> {
                         middleLineThickness: 0,
                       ),
                     ),
+                  ),
+                  IconButton(
+                    onPressed: _stopRecording,
+                    icon: Icon(Icons.stop, color: Colors.red),
                   ),
                 ],
               ),

@@ -183,13 +183,7 @@ class _CustomChatState extends State<CustomChat> {
                     ),
                   ] else
                     IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: context.themeValue(
-                          light: AppColors.lightText,
-                          dark: AppColors.darkText,
-                        ),
-                      ),
+                      icon: Icon(Icons.send, color: AppColors.primary),
                       onPressed: () => _sendTextMessage(),
                     ),
                 ],
@@ -548,6 +542,123 @@ class _CustomChatState extends State<CustomChat> {
     });
   }
 
+  void _pickReaction(ChatMessage message) async {
+    final reactions = [
+      // Mutluluk ve Sevgi
+      '😊',
+      '😂',
+      '🥰',
+      '😍',
+      '🤗',
+      '😘',
+      '😌',
+      '🙂',
+      '😆',
+      '😄',
+      '😃',
+      '😀',
+      '🥳',
+      '🤩',
+      // Üzüntü ve Negatif
+      '😢',
+      '😭',
+      '💔',
+      '😔',
+      '😞',
+      '🥺',
+      '😰',
+      '😥',
+      '😪',
+      '😓',
+      '😟',
+      '☹️',
+      '😦',
+      // Sinir ve Öfke
+      '😠', '😡', '🤬', '😤', '🙄', '😒', '🤨', '😑', '😐', '🫤', '😮‍💨',
+      // Şaşırma ve Korku
+      '😲', '😱', '🤯', '😨', '😵', '🤔', '😯', '😮', '🫢', '🫣', '😳', '🤭',
+      // İğrenme ve Hastalık
+      '🤢', '🤮', '😷', '🤧', '🤒', '😵‍💫', '🤕', '🤐', '🤫', '🤥',
+      // Gurur ve Özgüven
+      '😎', '🤓', '🧐', '😏', '😼', '😸', '😹', '😻', '🙀', '😿',
+      // Çılgınlık ve Eğlence
+      '🤪', '🥴', '😜', '😝', '🙃', '🤤', '🤑', '🤠', '🥸', '🤡',
+      // Azgınlık ve Tutku
+      '🔥', '🥵', '😈', '👿', '💋', '👅', '🍑', '🍆', '🌶️', '💦',
+      // Özel Durumlar
+      '😴', '🥱', '😶', '😇', '🤖', '👽', '👻', '💀', '☠️', '👹',
+      // El İşaretleri
+      '👍', '👎', '👌', '🤞', '🤟', '🤘', '👏', '🙏', '🤝', '✌️',
+      // Kalpler
+      '❤️',
+      '🧡',
+      '💛',
+      '💚',
+      '💙',
+      '💜',
+      '🤍',
+      '🖤',
+      '💗',
+      '💕',
+      '💖',
+      '💘',
+      '💝',
+      // Diğer Semboller
+      '⭐', '✨', '🌟', '💫', '⚡', '💥', '💯', '🎉', '🎊', '🎈', '🎁', '🏆', '🥇',
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Tepki Seç'),
+          content: SizedBox(
+            width: 300, // veya maxWidth
+            height: 400, // gerekirse
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 6, // aynı satırda kaç emoji gözükecek
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: reactions.length,
+              itemBuilder: (context, index) {
+                final reaction = reactions[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    _toggleReaction(message, reaction);
+                  },
+                  child: Center(
+                    child: Text(reaction, style: TextStyle(fontSize: 28)),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _toggleReaction(ChatMessage message, String reaction) {
+    setState(() {
+      if (message.reactions.containsKey(reaction)) {
+        if (message.reactions[reaction]!.contains(widget.currentUserId)) {
+          message.reactions[reaction]!.remove(widget.currentUserId);
+          if (message.reactions[reaction]!.isEmpty) {
+            message.reactions.remove(reaction);
+          }
+        } else {
+          message.reactions.putIfAbsent(reaction, () => []);
+          message.reactions[reaction]!.add(widget.currentUserId);
+        }
+      } else {
+        message.reactions[reaction] = [widget.currentUserId];
+      }
+    });
+  }
+
   Widget _buildAttachmentOption(
     IconData icon,
     String label,
@@ -603,21 +714,7 @@ class _CustomChatState extends State<CustomChat> {
           GestureDetector(
             onDoubleTap: () {
               HapticFeedback.selectionClick();
-              setState(() {
-                if (message.reactions.containsKey('❤️')) {
-                  if (message.reactions['❤️']!.contains(widget.currentUserId)) {
-                    message.reactions['❤️']!.remove(widget.currentUserId);
-                    if (message.reactions['❤️']!.isEmpty) {
-                      message.reactions.remove('❤️');
-                    }
-                  } else {
-                    message.reactions.putIfAbsent('❤️', () => []);
-                    message.reactions['❤️']!.add(widget.currentUserId);
-                  }
-                } else {
-                  message.reactions['❤️'] = [widget.currentUserId];
-                }
-              });
+              _toggleReaction(message, '❤️');
             },
             onLongPressStart:
                 (details) =>
@@ -762,23 +859,7 @@ class _CustomChatState extends State<CustomChat> {
         GestureDetector(
           onTap: () {
             HapticFeedback.selectionClick();
-            setState(() {
-              if (message.reactions.containsKey(reaction)) {
-                if (message.reactions[reaction]!.contains(
-                  widget.currentUserId,
-                )) {
-                  message.reactions[reaction]!.remove(widget.currentUserId);
-                  if (message.reactions[reaction]!.isEmpty) {
-                    message.reactions.remove(reaction);
-                  }
-                } else {
-                  message.reactions.putIfAbsent(reaction, () => []);
-                  message.reactions[reaction]!.add(widget.currentUserId);
-                }
-              } else {
-                message.reactions[reaction] = [widget.currentUserId];
-              }
-            });
+            _toggleReaction(message, reaction);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -885,53 +966,7 @@ class _CustomChatState extends State<CustomChat> {
       if (value != null) {
         switch (value) {
           case 'react':
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text('Tepki Seç'),
-                  content: Wrap(
-                    spacing: 10,
-                    children:
-                        ['❤️', '😂', '😮', '😢', '👍', '👎'].map((emoji) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                              HapticFeedback.selectionClick();
-                              setState(() {
-                                if (message.reactions.containsKey(emoji)) {
-                                  if (message.reactions[emoji]!.contains(
-                                    widget.currentUserId,
-                                  )) {
-                                    message.reactions[emoji]!.remove(
-                                      widget.currentUserId,
-                                    );
-                                    if (message.reactions[emoji]!.isEmpty) {
-                                      message.reactions.remove(emoji);
-                                    }
-                                  } else {
-                                    message.reactions.putIfAbsent(
-                                      emoji,
-                                      () => [],
-                                    );
-                                    message.reactions[emoji]!.add(
-                                      widget.currentUserId,
-                                    );
-                                  }
-                                } else {
-                                  message.reactions[emoji] = [
-                                    widget.currentUserId,
-                                  ];
-                                }
-                              });
-                            },
-                            child: Text(emoji, style: TextStyle(fontSize: 30)),
-                          );
-                        }).toList(),
-                  ),
-                );
-              },
-            );
+            _pickReaction(message);
             break;
           case 'copy':
             Clipboard.setData(ClipboardData(text: message.content));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/helpers/app_navigator.dart';
 import 'package:social/services/format_service.dart';
 import 'package:social/view_models/general/profile_viewmodel.dart';
 import 'package:social/views/general/main_layout_view.dart';
@@ -99,7 +100,7 @@ class _ProfileViewState extends State<ProfileView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => AppNavigator.pushNamed("/create-post"),
                   icon: Icon(Icons.add_box_outlined, color: Colors.white),
                 ),
                 IconButton(
@@ -107,7 +108,7 @@ class _ProfileViewState extends State<ProfileView> {
                   icon: Icon(Icons.share, color: Colors.white),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => AppNavigator.pushNamed("/account-settings"),
                   icon: Icon(Icons.settings, color: Colors.white),
                 ),
               ],
@@ -243,7 +244,7 @@ class _ProfileViewState extends State<ProfileView> {
         child: CustomElevatedButton(
           width: double.infinity,
           onPressed: () {
-            // Navigate to edit profile
+            AppNavigator.pushNamed("/edit-profile");
           },
           buttonText: "Profili Düzenle",
         ),
