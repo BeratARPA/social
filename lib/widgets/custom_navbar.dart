@@ -17,7 +17,7 @@ class CustomNavbar extends StatelessWidget {
         AppNavigator.pushReplacementNamed("/explore");
         break;
       case 2:
-        AppNavigator.pushNamed("/create-story");
+        AppNavigator.pushNamed("/create-post");
         break;
       case 3:
         AppNavigator.pushReplacementNamed("/vibes");

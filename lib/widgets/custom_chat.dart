@@ -7,6 +7,7 @@ import 'package:giphy_get/giphy_get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
+import 'package:social/widgets/custom_create_poll.dart';
 import 'package:social/widgets/custom_poll.dart';
 import 'package:social/widgets/custom_video_player.dart';
 import 'package:social/widgets/custom_voice_recorder_player.dart';
@@ -308,114 +309,16 @@ class _CustomChatState extends State<CustomChat> {
   }
 
   void _createPoll() {
-    final TextEditingController questionController = TextEditingController();
-    final List<TextEditingController> optionControllers = [
-      TextEditingController(),
-      TextEditingController(),
-    ];
-
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder:
-          (context) => StatefulBuilder(
-            builder:
-                (context, setDialogState) => AlertDialog(
-                  title: Text("Anket Oluştur"),
-                  content: SizedBox(
-                    width: double.maxFinite,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: questionController,
-                          decoration: InputDecoration(
-                            labelText: 'Anket Sorusu',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text("Seçenekler"),
-                        Expanded(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: optionControllers.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 4,
-                                ),
-                                child: TextField(
-                                  controller: optionControllers[index],
-                                  decoration: InputDecoration(
-                                    labelText: 'Seçenek ${index + 1}',
-                                    suffixIcon:
-                                        index >= 2
-                                            ? IconButton(
-                                              icon: Icon(
-                                                Icons.remove_circle_outline,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                setDialogState(() {
-                                                  optionControllers.removeAt(
-                                                    index,
-                                                  );
-                                                });
-                                              },
-                                            )
-                                            : null,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        if (optionControllers.length < 5)
-                          TextButton.icon(
-                            icon: Icon(Icons.add),
-                            label: Text('Seçenek Ekle'),
-                            onPressed: () {
-                              setDialogState(() {
-                                optionControllers.add(TextEditingController());
-                              });
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("Kapat"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        if (questionController.text.trim().isEmpty ||
-                            optionControllers.any(
-                              (controller) => controller.text.trim().isEmpty,
-                            ) ||
-                            optionControllers.length < 2) {
-                          return;
-                        }
-                        Navigator.pop(context);
-                        _sendPollMessage({
-                          'question': questionController.text.trim(),
-                          'options':
-                              optionControllers
-                                  .map((controller) => controller.text.trim())
-                                  .toList(),
-                          'votes': List.filled(optionControllers.length, 0),
-                        });
-                      },
-                      child: Text("Oluştur"),
-                    ),
-                  ],
-                ),
-          ),
+      builder: (context) {
+        return CustomCreatePoll(
+          onCreated: (pollData) {
+            _sendPollMessage(pollData);
+          },
+        );
+      },
     );
   }
 
