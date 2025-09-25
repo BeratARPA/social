@@ -3,14 +3,14 @@ import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/views/general/main_layout_view.dart';
 
-class AccountSettings extends StatefulWidget {
-  const AccountSettings({super.key});
+class AccountSettingsView extends StatefulWidget {
+  const AccountSettingsView({super.key});
 
   @override
-  State<AccountSettings> createState() => _AccountSettingsState();
+  State<AccountSettingsView> createState() => _AccountSettingsViewState();
 }
 
-class _AccountSettingsState extends State<AccountSettings> {
+class _AccountSettingsViewState extends State<AccountSettingsView> {
   bool _notificationsEnabled = true;
 
   @override

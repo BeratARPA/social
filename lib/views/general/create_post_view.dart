@@ -11,14 +11,14 @@ import 'package:social/widgets/custom_poll.dart';
 import 'package:social/widgets/custom_post_card.dart';
 import 'package:social/widgets/custom_video_player.dart';
 
-class CreatePost extends StatefulWidget {
-  const CreatePost({super.key});
+class CreatePostView extends StatefulWidget {
+  const CreatePostView({super.key});
 
   @override
-  State<CreatePost> createState() => _CreatePostState();
+  State<CreatePostView> createState() => _CreatePostViewState();
 }
 
-class _CreatePostState extends State<CreatePost> with TickerProviderStateMixin {
+class _CreatePostViewState extends State<CreatePostView> with TickerProviderStateMixin {
   final List<PostMedia> _mediaList = [];
 
   late TextEditingController _textController;

@@ -1,0 +1,1 @@
+enum VerificationType { verifyEmail, verifyPhone, resetPassword }

@@ -5,14 +5,14 @@ import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_elevated_button.dart';
 import 'package:social/widgets/custom_text_field.dart';
 
-class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+class EditProfileView extends StatefulWidget {
+  const EditProfileView({super.key});
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  State<EditProfileView> createState() => _EditProfileViewState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileViewState extends State<EditProfileView> {
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _bioController = TextEditingController();

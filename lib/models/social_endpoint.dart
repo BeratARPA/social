@@ -5,9 +5,9 @@ class SocialEndpoint {
   static String login = "Auth/login";
   static String refreshToken = "Auth/refresh-token";
   static String logout = "Auth/logout";
-  static String sendEmailVerification = "Auth/send-email-verification";
-  static String verifyEmail = "Auth/verify-email";
-  static String sendPhoneVerification = "Auth/send-phone-verification";
-  static String verifyPhone = "Auth/verify-phone";
+  static String sendVerification = "Auth/send-verification";
+  static String verifyCode = "Auth/verify-code";
+  static String forgotPassword = "Auth/forgot-password";
+  static String resetPassword = "Auth/reset-password";
   static String enable2FA = "Auth/enable-2fa";
 }

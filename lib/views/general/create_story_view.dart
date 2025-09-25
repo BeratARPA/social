@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/views/general/main_layout_view.dart';
-import 'package:social/widgets/custom_story_designer.dart';
+import 'package:social/widgets/custom_camera.dart';
 
 class CreateStoryView extends StatefulWidget {
   const CreateStoryView({super.key});
@@ -15,7 +15,9 @@ class _CreateStoryViewState extends State<CreateStoryView> {
     return MainLayoutView(
       showAppBar: false,
       showNavbar: false,
-      body: CustomStoryDesigner(),
+      body: CustomCamera(onMediaCaptured: (imageBytes, videoFile) {
+        
+      },),
     );
   }
 }

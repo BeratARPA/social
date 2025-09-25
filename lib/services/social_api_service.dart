@@ -1,4 +1,6 @@
 import 'package:social/enums/http_method.dart';
+import 'package:social/enums/verification_channel.dart';
+import 'package:social/enums/verification_type.dart';
 import 'package:social/helpers/app_constant.dart';
 import 'package:social/models/auth_response_model.dart';
 import 'package:social/models/social_endpoint.dart';
@@ -77,41 +79,77 @@ class SocialApiService {
     return response;
   }
 
-  Future<ApiResult<bool>> sendEmailVerification(String email) async {
+  Future<ApiResult<bool>> sendVerification(
+    VerificationChannel verificationChannel,
+    VerificationType verificationType,
+    String target,
+  ) async {
     var response = await httpClient.sendRequest<bool>(
       HttpMethod.post,
-      SocialEndpoint.sendEmailVerification,
-      body: {"email": email},
+      SocialEndpoint.sendVerification,
+      body: {
+        "verificationChannel": verificationChannel.index,
+        "verificationType": verificationType.index,
+        "target": target,
+      },
     );
 
     return response;
   }
 
-  Future<ApiResult<bool>> verifyEmail(String email, String code) async {
+  Future<ApiResult<bool>> verifyCode(
+    VerificationChannel verificationChannel,
+    VerificationType verificationType,
+    String target,
+    String code,
+  ) async {
     var response = await httpClient.sendRequest<bool>(
       HttpMethod.post,
-      SocialEndpoint.verifyEmail,
-      body: {"email": email, "code": code},
+      SocialEndpoint.verifyCode,
+      body: {
+        "verificationChannel": verificationChannel.index,
+        "verificationType": verificationType.index,
+        "target": target,
+        "code": code,
+      },
     );
 
     return response;
   }
 
-  Future<ApiResult<bool>> sendPhoneVerification(String phoneNumber) async {
+  Future<ApiResult<bool>> forgotPassword(
+    String email,
+    String newPassword,
+    String confirmPassword,
+    String verificationCode,
+  ) async {
     var response = await httpClient.sendRequest<bool>(
       HttpMethod.post,
-      SocialEndpoint.sendPhoneVerification,
-      body: {"phoneNumber": phoneNumber},
+      SocialEndpoint.forgotPassword,
+      body: {
+        "email": email,
+        "newPassword": newPassword,
+        "confirmPassword": confirmPassword,
+        "verificationCode": verificationCode,
+      },
     );
 
     return response;
   }
 
-  Future<ApiResult<bool>> verifyPhone(String phoneNumber, String code) async {
+  Future<ApiResult<bool>> resetPassword(
+    String currentPassword,
+    String newPassword,
+    String confirmPassword,
+  ) async {
     var response = await httpClient.sendRequest<bool>(
       HttpMethod.post,
-      SocialEndpoint.verifyPhone,
-      body: {"phoneNumber": phoneNumber, "code": code},
+      SocialEndpoint.resetPassword,
+      body: {
+        "currentPassword": currentPassword,
+        "newPassword": newPassword,
+        "confirmPassword": confirmPassword,
+      },
     );
 
     return response;

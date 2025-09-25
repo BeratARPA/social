@@ -1019,10 +1019,6 @@ class _CustomChatState extends State<CustomChat> {
         child: CustomVideoPlayer(
           url: message.content,
           autoPlay: false,
-          sourceType:
-              message.content.contains("http")
-                  ? VideoSourceType.network
-                  : VideoSourceType.asset,
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'package:social/enums/verification_channel.dart';
+import 'package:social/enums/verification_type.dart';
 import 'package:social/helpers/app_navigator.dart';
 import 'package:social/services/social_api_service.dart';
 import 'package:social/view_models/general/base_viewmodel.dart';
@@ -57,7 +59,12 @@ class AuthViewModel extends BaseViewModel {
         return;
       }
 
-      var result = await _socialApiService.verifyEmail(email, code);
+      var result = await _socialApiService.verifyCode(
+        VerificationChannel.email,
+        VerificationType.verifyEmail,
+        email,
+        code,
+      );
       if (!result.isSuccess) {
         if (result.errorCode == "ConfirmationCodeExpired") {
           AppNavigator.showSnack("Onay Kodu Süresi Doldu");
@@ -129,7 +136,11 @@ class AuthViewModel extends BaseViewModel {
 
       _startResendTimer(); // Timer'ı başlat
 
-      var result = await _socialApiService.sendEmailVerification(email);
+      var result = await _socialApiService.sendVerification(
+        VerificationChannel.email,
+        VerificationType.verifyEmail,
+        email,
+      );
       if (!result.isSuccess) {
         // Hata durumunda timer'ı sıfırla
         _canResend = true;
@@ -163,7 +174,11 @@ class AuthViewModel extends BaseViewModel {
 
       _startResendTimer(); // Timer'ı başlat
 
-      var result = await _socialApiService.sendEmailVerification(email);
+      var result = await _socialApiService.sendVerification(
+        VerificationChannel.email,
+        VerificationType.verifyEmail,
+        email,
+      );
       if (!result.isSuccess) {
         // Hata durumunda timer'ı sıfırla
         _canResend = true;
