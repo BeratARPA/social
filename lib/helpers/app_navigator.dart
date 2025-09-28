@@ -3,8 +3,9 @@ import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/views/auth/login_view.dart';
 import 'package:social/views/auth/register_view.dart';
-import 'package:social/views/auth/send_email_verification_view.dart';
-import 'package:social/views/auth/verify_email_view.dart';
+import 'package:social/views/auth/reset_password_view.dart';
+import 'package:social/views/auth/send_verification_view.dart';
+import 'package:social/views/auth/verify_code_view.dart';
 import 'package:social/views/general/account_settings_view.dart';
 import 'package:social/views/general/chat_view.dart';
 import 'package:social/views/general/create_post_view.dart';
@@ -34,8 +35,9 @@ class AppNavigator {
     "/create-story": (context) => const CreateStoryView(),
     "/login": (context) => const LoginView(),
     "/register": (context) => const RegisterView(),
-    "/send-email-verification": (context) => const SendEmailVerificationView(),
-    "/verify-email": (context) => const VerifyEmailView(),
+    "/send-verification": (context) => const SendVerificationView(),
+    "/verify-code": (context) => const VerifyCodeView(),
+    "/reset-password": (context) => const ResetPasswordView(),
   };
 
   static final GlobalKey<NavigatorState> navigatorKey =

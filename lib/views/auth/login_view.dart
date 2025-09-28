@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social/enums/verification_channel.dart';
+import 'package:social/enums/verification_type.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/helpers/app_constant.dart';
@@ -93,7 +95,16 @@ class _LoginViewState extends State<LoginView> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed:
+                                  () => AppNavigator.pushNamed(
+                                    '/send-verification',
+                                    arguments: {
+                                      "verificationType":
+                                          VerificationType.resetPassword,
+                                      "verificationChannel":
+                                          VerificationChannel.email,
+                                    },
+                                  ),
                               child: Text(
                                 AppLocalizations.of(context)!.forgotPassword,
                               ),
@@ -111,7 +122,6 @@ class _LoginViewState extends State<LoginView> {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                // Marka ana tonu
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -143,9 +153,7 @@ class _LoginViewState extends State<LoginView> {
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.primary,
-                              side: const BorderSide(
-                                color: AppColors.primary,
-                              ),
+                              side: const BorderSide(color: AppColors.primary),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

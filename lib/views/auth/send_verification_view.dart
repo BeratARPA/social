@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social/enums/verification_channel.dart';
+import 'package:social/enums/verification_type.dart';
 import 'package:social/extensions/theme_extension.dart';
 import 'package:social/helpers/app_color.dart';
 import 'package:social/helpers/app_constant.dart';
@@ -9,15 +11,14 @@ import 'package:social/views/general/main_layout_view.dart';
 import 'package:social/widgets/custom_elevated_button.dart';
 import 'package:social/widgets/custom_text_field.dart';
 
-class SendEmailVerificationView extends StatefulWidget {
-  const SendEmailVerificationView({super.key});
+class SendVerificationView extends StatefulWidget {
+  const SendVerificationView({super.key});
 
   @override
-  State<SendEmailVerificationView> createState() =>
-      _SendEmailVerificationViewState();
+  State<SendVerificationView> createState() => _SendVerificationViewState();
 }
 
-class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
+class _SendVerificationViewState extends State<SendVerificationView> {
   final emailController = TextEditingController();
 
   @override
@@ -29,6 +30,11 @@ class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AuthViewModel>(context);
+
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final verificationType = args["verificationType"] as VerificationType;
+    final verificationChannel =
+        args["verificationChannel"] as VerificationChannel;
 
     return MainLayoutView(
       showAppBar: false,
@@ -57,7 +63,7 @@ class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
                 color: AppColors.primary,
               ),
             ),
-        
+
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
@@ -88,7 +94,9 @@ class _SendEmailVerificationViewState extends State<SendEmailVerificationView> {
                         child: CustomElevatedButton(
                           buttonText: "Gönder",
                           onPressed: () async {
-                            await viewModel.sendEmailVerification(
+                            await viewModel.sendVerification(
+                              verificationChannel,
+                              verificationType,
                               emailController.text.trim(),
                             );
                           },

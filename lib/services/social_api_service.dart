@@ -4,6 +4,7 @@ import 'package:social/enums/verification_type.dart';
 import 'package:social/helpers/app_constant.dart';
 import 'package:social/models/auth_response_model.dart';
 import 'package:social/models/social_endpoint.dart';
+import 'package:social/models/verify_code_response_model.dart';
 import 'package:social/services/http_client_service.dart';
 
 class SocialApiService {
@@ -97,13 +98,13 @@ class SocialApiService {
     return response;
   }
 
-  Future<ApiResult<bool>> verifyCode(
+  Future<ApiResult<VerifyCodeResponseModel>> verifyCode(
     VerificationChannel verificationChannel,
     VerificationType verificationType,
     String target,
     String code,
   ) async {
-    var response = await httpClient.sendRequest<bool>(
+    var response = await httpClient.sendRequest<VerifyCodeResponseModel>(
       HttpMethod.post,
       SocialEndpoint.verifyCode,
       body: {
@@ -112,25 +113,26 @@ class SocialApiService {
         "target": target,
         "code": code,
       },
+      fromJson: (json) => VerifyCodeResponseModel.fromJson(json),
     );
 
     return response;
   }
 
   Future<ApiResult<bool>> forgotPassword(
+    String actionToken,
     String email,
     String newPassword,
     String confirmPassword,
-    String verificationCode,
   ) async {
     var response = await httpClient.sendRequest<bool>(
       HttpMethod.post,
       SocialEndpoint.forgotPassword,
       body: {
+        "actionToken": actionToken,
         "email": email,
         "newPassword": newPassword,
         "confirmPassword": confirmPassword,
-        "verificationCode": verificationCode,
       },
     );
 

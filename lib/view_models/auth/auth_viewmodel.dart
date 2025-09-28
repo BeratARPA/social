@@ -34,7 +34,13 @@ class AuthViewModel extends BaseViewModel {
       var result = await _socialApiService.login(username, password);
       if (!result.isSuccess) {
         if (result.errorCode == "EmailNotConfirmed") {
-          await AppNavigator.pushNamed("/send-email-verification");
+          await AppNavigator.pushNamed(
+            "/send-verification",
+            arguments: {
+              "verificationType": VerificationType.verifyEmail,
+              "verificationChannel": VerificationChannel.email,
+            },
+          );
           return;
         }
 
@@ -52,17 +58,22 @@ class AuthViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> verifyEmail(String email, String code) async {
+  Future<void> verifyCode(
+    VerificationChannel verificationChannel,
+    VerificationType verificationType,
+    String target,
+    String code,
+  ) async {
     await runWithInternetCheck(() async {
-      if (email.isEmpty || code.isEmpty) {
+      if (target.isEmpty || code.isEmpty) {
         AppNavigator.showSnack("Lütfen tüm alanları doldurun");
         return;
       }
 
       var result = await _socialApiService.verifyCode(
-        VerificationChannel.email,
-        VerificationType.verifyEmail,
-        email,
+        verificationChannel,
+        verificationType,
+        target,
         code,
       );
       if (!result.isSuccess) {
@@ -76,8 +87,18 @@ class AuthViewModel extends BaseViewModel {
       }
 
       clearError();
-      AppNavigator.showSnack("Email doğrulama başarılı");
-      AppNavigator.popUntil((route) => route.isFirst);
+      if (verificationType == VerificationType.resetPassword) {
+        AppNavigator.pushNamed(
+          "/reset-password",
+          arguments: {
+            "actionToken": result.data!.actionToken,
+            "target": target,
+          },
+        );
+      } else {
+        AppNavigator.showSnack("Doğrulama başarılı");
+        AppNavigator.popUntil((route) => route.isFirst);
+      }
     });
   }
 
@@ -118,13 +139,21 @@ class AuthViewModel extends BaseViewModel {
       }
 
       clearError();
-      await sendEmailVerification(email);
+      await sendVerification(
+        VerificationChannel.email,
+        VerificationType.verifyEmail,
+        email,
+      );
     });
   }
 
-  Future<void> resendEmailVerification(String email) async {
+  Future<void> resendVerification(
+    VerificationChannel verificationChannel,
+    VerificationType verificationType,
+    String target,
+  ) async {
     await runWithInternetCheck(() async {
-      if (email.isEmpty) {
+      if (target.isEmpty) {
         AppNavigator.showSnack("Lütfen tüm alanları doldurun");
         return;
       }
@@ -137,9 +166,9 @@ class AuthViewModel extends BaseViewModel {
       _startResendTimer(); // Timer'ı başlat
 
       var result = await _socialApiService.sendVerification(
-        VerificationChannel.email,
-        VerificationType.verifyEmail,
-        email,
+        verificationChannel,
+        verificationType,
+        target,
       );
       if (!result.isSuccess) {
         // Hata durumunda timer'ı sıfırla
@@ -160,9 +189,13 @@ class AuthViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> sendEmailVerification(String email) async {
+  Future<void> sendVerification(
+    VerificationChannel verificationChannel,
+    VerificationType verificationType,
+    String target,
+  ) async {
     await runWithInternetCheck(() async {
-      if (email.isEmpty) {
+      if (target.isEmpty) {
         AppNavigator.showSnack("Lütfen tüm alanları doldurun");
         return;
       }
@@ -175,9 +208,9 @@ class AuthViewModel extends BaseViewModel {
       _startResendTimer(); // Timer'ı başlat
 
       var result = await _socialApiService.sendVerification(
-        VerificationChannel.email,
-        VerificationType.verifyEmail,
-        email,
+        verificationChannel,
+        verificationType,
+        target,
       );
       if (!result.isSuccess) {
         // Hata durumunda timer'ı sıfırla
@@ -195,7 +228,61 @@ class AuthViewModel extends BaseViewModel {
 
       clearError();
       AppNavigator.showSnack("E-posta doğrulama kodu gönderildi");
-      await AppNavigator.pushNamed("/verify-email", arguments: email);
+      await AppNavigator.pushNamed(
+        "/verify-code",
+        arguments: {
+          "target": target,
+          "verificationType": verificationType,
+          "verificationChannel": verificationChannel,
+        },
+      );
+    });
+  }
+
+  Future<void> resetPassword(
+    String actionToken,
+    String email,
+    String newPassword,
+    String confirmNewPassword,
+  ) async {
+    await runWithInternetCheck(() async {
+      if (email.isEmpty ||
+          actionToken.isEmpty ||
+          newPassword.isEmpty ||
+          confirmNewPassword.isEmpty) {
+        AppNavigator.showSnack("Lütfen tüm alanları doldurun");
+        return;
+      }
+
+      if (newPassword != confirmNewPassword) {
+        AppNavigator.showSnack("Şifreler uyuşmuyor");
+        return;
+      }
+
+      var result = await _socialApiService.forgotPassword(
+        actionToken,
+        email,
+        newPassword,
+        confirmNewPassword,
+      );
+      if (!result.isSuccess) {
+        if (result.errorCode == "InvalidCode") {
+          AppNavigator.showSnack("Geçersiz kod");
+          return;
+        }
+
+        if (result.errorCode == "ConfirmationCodeExpired") {
+          AppNavigator.showSnack("Onay Kodu Süresi Doldu");
+          return;
+        }
+
+        AppNavigator.showSnack(result.errorCode!);
+        return;
+      }
+
+      clearError();
+      AppNavigator.showSnack("Şifre sıfırlama başarılı");
+      AppNavigator.popUntil((route) => route.isFirst);
     });
   }
 
