@@ -8,6 +8,7 @@ class AuthViewModel extends BaseViewModel {
   final SocialApiService _socialApiService;
 
   bool _canResend = true;
+
   bool get canResend => _canResend;
 
   AuthViewModel(this._socialApiService) {
@@ -53,6 +54,16 @@ class AuthViewModel extends BaseViewModel {
         return;
       }
 
+      if (result.data!.requiresTwoFactor!) {
+        await sendVerification(
+          VerificationChannel.whatsApp,
+          VerificationType.twoFactor,
+          result.data!.phoneNumber!,
+          twoFactorToken: result.data!.twoFactorToken!,
+        );
+        return;
+      }
+
       clearError();
       AppNavigator.pushReplacementNamed("/home");
     });
@@ -76,8 +87,9 @@ class AuthViewModel extends BaseViewModel {
         target,
         code,
       );
+
       if (!result.isSuccess) {
-        if (result.errorCode == "ConfirmationCodeExpired") {
+        if (result.errorCode == "VerificationCodeExpired") {
           AppNavigator.showSnack("Onay Kodu Süresi Doldu");
           return;
         }
@@ -99,6 +111,30 @@ class AuthViewModel extends BaseViewModel {
         AppNavigator.showSnack("Doğrulama başarılı");
         AppNavigator.popUntil((route) => route.isFirst);
       }
+    });
+  }
+
+  Future<void> verify2FA(String twoFactorToken, String code) async {
+    await runWithInternetCheck(() async {
+      if (twoFactorToken.isEmpty || code.isEmpty) {
+        AppNavigator.showSnack("Lütfen tüm alanları doldurun");
+        return;
+      }
+
+      var result = await _socialApiService.verify2FA(twoFactorToken, code);
+
+      if (!result.isSuccess) {
+        if (result.errorCode == "VerificationCodeExpired") {
+          AppNavigator.showSnack("Onay Kodu Süresi Doldu");
+          return;
+        }
+
+        AppNavigator.showSnack(result.errorCode!);
+        return;
+      }
+
+      clearError();
+      AppNavigator.pushReplacementNamed("/home");
     });
   }
 
@@ -185,15 +221,16 @@ class AuthViewModel extends BaseViewModel {
       }
 
       clearError();
-      AppNavigator.showSnack("E-posta doğrulama kodu gönderildi");
+      AppNavigator.showSnack("Doğrulama kodu gönderildi");
     });
   }
 
   Future<void> sendVerification(
     VerificationChannel verificationChannel,
     VerificationType verificationType,
-    String target,
-  ) async {
+    String target, {
+    String twoFactorToken = "",
+  }) async {
     await runWithInternetCheck(() async {
       if (target.isEmpty) {
         AppNavigator.showSnack("Lütfen tüm alanları doldurun");
@@ -227,10 +264,11 @@ class AuthViewModel extends BaseViewModel {
       }
 
       clearError();
-      AppNavigator.showSnack("E-posta doğrulama kodu gönderildi");
+      AppNavigator.showSnack("Doğrulama kodu gönderildi");
       await AppNavigator.pushNamed(
         "/verify-code",
         arguments: {
+          "twoFactorToken": twoFactorToken,
           "target": target,
           "verificationType": verificationType,
           "verificationChannel": verificationChannel,
@@ -266,12 +304,7 @@ class AuthViewModel extends BaseViewModel {
         confirmNewPassword,
       );
       if (!result.isSuccess) {
-        if (result.errorCode == "InvalidCode") {
-          AppNavigator.showSnack("Geçersiz kod");
-          return;
-        }
-
-        if (result.errorCode == "ConfirmationCodeExpired") {
+        if (result.errorCode == "VerificationCodeExpired") {
           AppNavigator.showSnack("Onay Kodu Süresi Doldu");
           return;
         }

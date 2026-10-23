@@ -19,11 +19,11 @@ class SendVerificationView extends StatefulWidget {
 }
 
 class _SendVerificationViewState extends State<SendVerificationView> {
-  final emailController = TextEditingController();
+  final _inputController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
+    _inputController.dispose();
     super.dispose();
   }
 
@@ -70,16 +70,19 @@ class _SendVerificationViewState extends State<SendVerificationView> {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     children: [
-                      const Text(
-                        "E-Posta adresinizi girin, kod göndereceğiz.",
+                      Text(
+                        getVerificationChannelText(verificationChannel),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 12),
                       ),
                       const SizedBox(height: 24),
                       CustomTextField(
-                        controller: emailController,
+                        controller: _inputController,
                         hintText: AppLocalizations.of(context)!.email,
-                        prefixIcon: Icons.email,
+                        prefixIcon:
+                            verificationChannel == VerificationChannel.email
+                                ? Icons.email
+                                : Icons.sms,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -97,7 +100,7 @@ class _SendVerificationViewState extends State<SendVerificationView> {
                             await viewModel.sendVerification(
                               verificationChannel,
                               verificationType,
-                              emailController.text.trim(),
+                              _inputController.text.trim(),
                             );
                           },
                         ),
@@ -113,5 +116,15 @@ class _SendVerificationViewState extends State<SendVerificationView> {
         ),
       ),
     );
+  }
+
+  String getVerificationChannelText(VerificationChannel channel) {
+    switch (channel) {
+      case VerificationChannel.email:
+        return "E-Posta adresinizi girin, kod göndereceğiz.";
+      case VerificationChannel.sms:
+      case VerificationChannel.whatsApp:
+        return "Telefon numaranızı girin, kod göndereceğiz.";
+    }
   }
 }

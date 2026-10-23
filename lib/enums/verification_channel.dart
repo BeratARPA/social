@@ -1,1 +1,1 @@
-enum VerificationChannel { email, sms }
+enum VerificationChannel { email, sms, whatsApp }

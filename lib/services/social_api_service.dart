@@ -157,7 +157,34 @@ class SocialApiService {
     return response;
   }
 
-  Future<bool> enable2FA() async {
-    return true;
+  Future<ApiResult<bool>> enable2FA(bool enable) async {
+    var response = await httpClient.sendRequest<bool>(
+      HttpMethod.post,
+      SocialEndpoint.enable2FA,
+      body: {"enable": enable},
+    );
+
+    return response;
+  }
+
+  Future<ApiResult<AuthResponseModel>> verify2FA(
+    String twoFactorToken,
+    String verificationCode,
+  ) async {
+    var response = await httpClient.sendRequest<AuthResponseModel>(
+      HttpMethod.post,
+      SocialEndpoint.verify2FA,
+      body: {
+        "twoFactorToken": twoFactorToken,
+        "verificationCode": verificationCode,
+      },
+      fromJson: (json) => AuthResponseModel.fromJson(json),
+    );
+
+    if (response.isSuccess) {
+      AppConstant.currentAuth = response.data;
+    }
+
+    return response;
   }
 }

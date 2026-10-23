@@ -35,6 +35,7 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
     final verificationType = args["verificationType"] as VerificationType;
     final verificationChannel =
         args["verificationChannel"] as VerificationChannel;
+    final twoFactorToken = args["twoFactorToken"] as String?;
 
     return MainLayoutView(
       showAppBar: false,
@@ -69,8 +70,8 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     children: [
-                      const Text(
-                        "E-Posta adresine gönderilen 6 haneli kodu giriniz.",
+                      Text(
+                        getVerificationChannelText(verificationChannel),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 12),
                       ),
@@ -89,12 +90,17 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
                         child: CustomElevatedButton(
                           buttonText: "Doğrula",
                           onPressed: () async {
-                            await viewModel.verifyCode(
-                              verificationChannel,
-                              verificationType,
-                              target!,
-                              codeController.text.trim(),
-                            );
+                            verificationType == VerificationType.twoFactor
+                                ? await viewModel.verify2FA(
+                                  twoFactorToken!,
+                                  codeController.text.trim(),
+                                )
+                                : await viewModel.verifyCode(
+                                  verificationChannel,
+                                  verificationType,
+                                  target!,
+                                  codeController.text.trim(),
+                                );
                           },
                         ),
                       ),
@@ -126,5 +132,16 @@ class _VerifyCodeViewState extends State<VerifyCodeView> {
         ),
       ),
     );
+  }
+
+  String getVerificationChannelText(VerificationChannel channel) {
+    switch (channel) {
+      case VerificationChannel.email:
+        return "E-posta adresinize gönderilen kodu giriniz.";
+      case VerificationChannel.sms:
+        return "Telefonunuza gönderilen kodu giriniz.";
+      case VerificationChannel.whatsApp:
+        return "WhatsApp üzerinden gönderilen kodu giriniz.";
+    }
   }
 }

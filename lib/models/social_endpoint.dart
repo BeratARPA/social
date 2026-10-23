@@ -10,4 +10,5 @@ class SocialEndpoint {
   static String forgotPassword = "Auth/forgot-password";
   static String resetPassword = "Auth/reset-password";
   static String enable2FA = "Auth/enable-2fa";
+  static String verify2FA = "Auth/verify-2fa";
 }
